@@ -49,8 +49,8 @@ public:
 
     inline void setCardSuit(CardSuit suit) { m_suit = suit; }
     inline void setCardPoint(CardPoint point) { m_point = point; }
-    inline CardSuit getCardSuit() { return m_suit; }
-    inline CardPoint getCardPoint() { return m_point; }
+    inline CardSuit getCardSuit() const { return m_suit; }
+    inline CardPoint getCardPoint() const { return m_point; }
 };
 
 #endif // CARD_H
