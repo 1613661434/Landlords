@@ -3,6 +3,7 @@
 
 #include "card.h"
 #include <QSet>
+#include <QRandomGenerator>
 
 class Cards
 {
@@ -35,11 +36,12 @@ public:
     inline bool isEmpty() { return m_cards.isEmpty(); }
     inline void clear() { m_cards.clear(); }
 
-    Card::CardPoint maxPoint();                                                   // 最大点数
-    Card::CardPoint minPoint();                                                   // 最小点数
-    int pointCount(Card::CardPoint point);                                        // 指定点数牌的数量
-    bool contains(const Card& card) { return m_cards.contains(card); }            // 某张牌是否在集合中
-    bool contains(const Cards& cards) { return m_cards.contains(cards.m_cards); } // 某几张牌是否在集合中
+    Card::CardPoint maxPoint();                                                          // 最大点数
+    Card::CardPoint minPoint();                                                          // 最小点数
+    int pointCount(Card::CardPoint point);                                               // 指定点数牌的数量
+    inline bool contains(const Card& card) { return m_cards.contains(card); }            // 某张牌是否在集合中
+    inline bool contains(const Cards& cards) { return m_cards.contains(cards.m_cards); } // 某几张牌是否在集合中
+    Card takeRandCard();
 };
 
 #endif // CARDS_H

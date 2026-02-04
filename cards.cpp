@@ -43,3 +43,17 @@ int Cards::pointCount(Card::CardPoint point)
 
     return count;
 }
+
+Card Cards::takeRandCard()
+{
+    int num = QRandomGenerator::global()->bounded(m_cards.size());
+    QSet<Card>::const_iterator it = m_cards.constBegin();
+    while (num > 0)
+    {
+        --num;
+        ++it;
+    }
+    Card card = *it;
+    m_cards.erase(it);
+    return card;
+}
