@@ -16,6 +16,7 @@ qt_add_executable(Landloads
     card.h card.cpp
     cardpanel.h cardpanel.cpp
     player.h player.cpp
+    cards.h cards.cpp
 )
 
 target_link_libraries(Landloads
