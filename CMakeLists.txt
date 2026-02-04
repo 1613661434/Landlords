@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.19)
 project(Landloads LANGUAGES CXX)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
 qt_standard_project_setup()
 
@@ -12,6 +14,8 @@ qt_add_executable(Landloads
     gamepanel.h
     gamepanel.ui
     card.h card.cpp
+    cardpanel.h cardpanel.cpp
+    player.h player.cpp
 )
 
 target_link_libraries(Landloads
@@ -19,6 +23,8 @@ target_link_libraries(Landloads
         Qt::Core
         Qt::Widgets
 )
+target_link_libraries(Landloads PRIVATE Qt6::Widgets)
+target_link_libraries(Landloads PRIVATE Qt6::Core)
 
 include(GNUInstallDirs)
 
