@@ -4,18 +4,28 @@
 #include "card.h"
 #include <QSet>
 #include <QRandomGenerator>
+#include <algorithm>
 
 class Cards
 {
+public:
+    enum class SortType : char
+    {
+        Asc,
+        Desc,
+        NoSort
+    };
+
 private:
-    QSet<Card> m_cards;
+    QSet<Card>
+        m_cards;
 
 public:
     Cards();
 
     // 添加扑克牌
-    inline void add(Card& card) { m_cards.insert(card); }
-    inline void add(Cards& cards) { m_cards.unite(cards.m_cards); }
+    inline void add(const Card& card) { m_cards.insert(card); }
+    inline void add(const Cards& cards) { m_cards.unite(cards.m_cards); }
 
     Cards& operator<<(const Card& card)
     {
@@ -29,19 +39,20 @@ public:
     }
 
     // 删除扑克牌
-    inline void remove(Card& card) { m_cards.remove(card); }
-    inline void remove(Cards& cards) { m_cards.subtract(cards.m_cards); }
+    inline void remove(const Card& card) { m_cards.remove(card); }
+    inline void remove(const Cards& cards) { m_cards.subtract(cards.m_cards); }
 
-    inline int cardCount() { return m_cards.size(); }
-    inline bool isEmpty() { return m_cards.isEmpty(); }
+    inline int cardCount() const { return m_cards.size(); }
+    inline bool isEmpty() const { return m_cards.isEmpty(); }
     inline void clear() { m_cards.clear(); }
 
-    Card::CardPoint maxPoint();                                                          // 最大点数
-    Card::CardPoint minPoint();                                                          // 最小点数
-    int pointCount(Card::CardPoint point);                                               // 指定点数牌的数量
-    inline bool contains(const Card& card) { return m_cards.contains(card); }            // 某张牌是否在集合中
-    inline bool contains(const Cards& cards) { return m_cards.contains(cards.m_cards); } // 某几张牌是否在集合中
-    Card takeRandCard();
+    Card::CardPoint maxPoint() const;                                                          // 最大点数
+    Card::CardPoint minPoint() const;                                                          // 最小点数
+    int pointCount(Card::CardPoint point) const;                                               // 指定点数牌的数量
+    inline bool contains(const Card& card) const { return m_cards.contains(card); }            // 某张牌是否在集合中
+    inline bool contains(const Cards& cards) const { return m_cards.contains(cards.m_cards); } // 某几张牌是否在集合中
+    Card takeRandCard();                                                                       // 随机取一张牌
+    CardList toCardList(SortType type) const;
 };
 
 #endif // CARDS_H

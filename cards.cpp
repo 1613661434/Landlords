@@ -2,7 +2,7 @@
 
 Cards::Cards() {}
 
-Card::CardPoint Cards::maxPoint()
+Card::CardPoint Cards::maxPoint() const
 {
     Card::CardPoint maxPt = Card::CardPoint::Card_Begin;
 
@@ -16,7 +16,7 @@ Card::CardPoint Cards::maxPoint()
     return maxPt;
 }
 
-Card::CardPoint Cards::minPoint()
+Card::CardPoint Cards::minPoint() const
 {
     Card::CardPoint minPt = Card::CardPoint::Card_End;
 
@@ -30,7 +30,7 @@ Card::CardPoint Cards::minPoint()
     return minPt;
 }
 
-int Cards::pointCount(Card::CardPoint point)
+int Cards::pointCount(Card::CardPoint point) const
 {
     int count = 0;
 
@@ -56,4 +56,26 @@ Card Cards::takeRandCard()
     Card card = *it;
     m_cards.erase(it);
     return card;
+}
+
+CardList Cards::toCardList(SortType type) const
+{
+    CardList list(m_cards.begin(), m_cards.end());
+
+    switch (type)
+    {
+    case SortType::Asc:
+        std::sort(list.begin(), list.end(), Card::lessSort);
+        break;
+    case SortType::Desc:
+        std::sort(list.begin(), list.end(), Card::greaterSort);
+        break;
+    case SortType::NoSort:
+        break;
+    default:
+        qWarning() << "Unknown SortType: " << static_cast<int>(type);
+        break;
+    }
+
+    return list;
 }

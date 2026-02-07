@@ -1,6 +1,8 @@
 #ifndef CARD_H
 #define CARD_H
 
+#include <QVector>
+
 class Card
 {
     // == 枚举定义 ==
@@ -47,10 +49,23 @@ private:
 public:
     Card();
 
+    inline static bool lessSort(const Card& a, const Card& b)
+    {
+        if (a.m_point == b.m_point) return a.m_suit < b.m_suit;
+        return a.m_point < b.m_point;
+    }
+    inline static bool greaterSort(const Card& a, const Card& b)
+    {
+        if (a.m_point == b.m_point) return a.m_suit > b.m_suit;
+        return a.m_point > b.m_point;
+    }
+
     inline void setCardSuit(CardSuit suit) { m_suit = suit; }
     inline void setCardPoint(CardPoint point) { m_point = point; }
     inline CardSuit getCardSuit() const { return m_suit; }
     inline CardPoint getCardPoint() const { return m_point; }
 };
+
+using CardList = QVector<Card>;
 
 #endif // CARD_H
