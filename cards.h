@@ -5,6 +5,7 @@
 #include <QSet>
 #include <QRandomGenerator>
 #include <algorithm>
+#include <QDebug>
 
 class Cards
 {

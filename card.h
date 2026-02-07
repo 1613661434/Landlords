@@ -64,6 +64,10 @@ public:
     inline void setCardPoint(CardPoint point) { m_point = point; }
     inline CardSuit getCardSuit() const { return m_suit; }
     inline CardPoint getCardPoint() const { return m_point; }
+
+    // == 友元函数 ==
+    friend inline bool operator==(const Card& a, const Card& b) { return (a.m_suit == b.m_suit) && (a.m_point == b.m_point); }
+    friend inline uint qHash(const Card& card, uint seed = 0) { return qHash(static_cast<uint>(card.m_suit), qHash(static_cast<uint>(card.m_point), seed)); }
 };
 
 using CardList = QVector<Card>;
