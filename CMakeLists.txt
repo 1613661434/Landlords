@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(Landloads LANGUAGES CXX)
+project(Landlords LANGUAGES CXX)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
@@ -7,7 +7,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
 
 qt_standard_project_setup()
 
-qt_add_executable(Landloads
+qt_add_executable(Landlords
     WIN32 MACOSX_BUNDLE
     main.cpp
     gamepanel.cpp
@@ -19,24 +19,24 @@ qt_add_executable(Landloads
     cards.h cards.cpp
 )
 
-target_link_libraries(Landloads
+target_link_libraries(Landlords
     PRIVATE
         Qt::Core
         Qt::Widgets
 )
-target_link_libraries(Landloads PRIVATE Qt6::Widgets)
-target_link_libraries(Landloads PRIVATE Qt6::Core)
+target_link_libraries(Landlords PRIVATE Qt6::Widgets)
+target_link_libraries(Landlords PRIVATE Qt6::Core)
 
 include(GNUInstallDirs)
 
-install(TARGETS Landloads
+install(TARGETS Landlords
     BUNDLE  DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
 qt_generate_deploy_app_script(
-    TARGET Landloads
+    TARGET Landlords
     OUTPUT_SCRIPT deploy_script
     NO_UNSUPPORTED_PLATFORM_ERROR
 )
