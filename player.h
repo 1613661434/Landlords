@@ -35,7 +35,7 @@ public:
     }; // 玩家的类型
 
     // == 成员变量 ==
-private:
+protected:
     QString m_name;
     Role m_role;
     Sex m_sex;
@@ -46,6 +46,8 @@ private:
     Player* m_prev;
     Player* m_next;
     Cards m_cards;
+    Cards m_pendCards;
+    Player* m_pendPlayer;
 
     // == 函数 ==
 public:
@@ -98,6 +100,20 @@ public:
     inline Cards getCards() const { return m_cards; }             // 得到所有牌
     inline void clearCards() { m_cards.clear(); }                 // 清空所有牌
     inline void playHand(Cards& cards) { m_cards.remove(cards); } // 出牌
+
+    // 待处理扑克牌相关
+    inline void setPendingInfo(Player* player, Cards& cards)
+    {
+        m_pendPlayer = player;
+        m_pendCards = cards;
+    }
+    inline Player* getPendPlayer() { return m_pendPlayer; }
+    inline Cards getPendCards() { return m_pendCards; }
+
+    // == 虚函数 ==
+public:
+    virtual void prepareCallLord() = 0; // 准备叫地主
+    virtual void preparePlayHand() = 0; // 准备出牌
 signals:
 };
 
