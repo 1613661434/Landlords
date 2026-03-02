@@ -21,6 +21,7 @@ qt_add_executable(Landlords
     cards.h cards.cpp
     robot.h robot.cpp
     userplayer.h userplayer.cpp
+    gamecontrol.h gamecontrol.cpp
 )
 
 target_link_libraries(Landlords
