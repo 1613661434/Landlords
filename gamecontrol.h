@@ -52,6 +52,19 @@ public:
     // 重置卡牌数据
     void resetCardData();
 
+    // 准备叫地主
+    inline void startLordCard() { m_currPlayer->prepareCallLord(); }
+
+    // 成为地主
+    void becomeLord(Player* player);
+
+    // 清空所有玩家的得分
+    void clearPlayerScore();
+
+    // 处理叫地主
+
+    // 处理出牌
+
     // Get&Set
     inline Robot* getLeftRobot() const { return m_robotLeft; }
     inline Robot* getRightRobot() const { return m_robotRight; }

@@ -71,3 +71,22 @@ void GameControl::resetCardData()
     m_pendPlayer = nullptr;
     m_pendCards.clear();
 }
+
+void GameControl::becomeLord(Player* player)
+{
+    player->setRole(Player::Role::Load);
+    player->getPrevPlayer()->setRole(Player::Role::Farmer);
+    player->getNextPlayer()->setRole(Player::Role::Farmer);
+
+    m_currPlayer = player;
+    player->storeDispatchCard(m_allCards);
+
+    m_currPlayer->preparePlayHand();
+}
+
+void GameControl::clearPlayerScore()
+{
+    m_robotLeft->setScore(0);
+    m_robotRight->setScore(0);
+    m_user->setScore(0);
+}
