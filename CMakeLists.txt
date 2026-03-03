@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.19)
 project(Landlords LANGUAGES CXX)
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Core)
@@ -24,12 +26,13 @@ qt_add_executable(Landlords
     gamecontrol.h gamecontrol.cpp
     ol_enum_char_ops.h
     scorepanel.h scorepanel.cpp scorepanel.ui
+    mybutton.h mybutton.cpp
 )
 
 target_link_libraries(Landlords
     PRIVATE
-        Qt::Core
-        Qt::Widgets
+    Qt::Core
+    Qt::Widgets
 )
 target_link_libraries(Landlords PRIVATE Qt6::Widgets)
 target_link_libraries(Landlords PRIVATE Qt6::Core)
@@ -39,7 +42,7 @@ target_link_libraries(Landlords PRIVATE Qt6::Core)
 include(GNUInstallDirs)
 
 install(TARGETS Landlords
-    BUNDLE  DESTINATION .
+    BUNDLE DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
