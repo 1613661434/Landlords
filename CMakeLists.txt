@@ -23,6 +23,7 @@ qt_add_executable(Landlords
     userplayer.h userplayer.cpp
     gamecontrol.h gamecontrol.cpp
     ol_enum_char_ops.h
+    scorepanel.h scorepanel.cpp scorepanel.ui
 )
 
 target_link_libraries(Landlords
