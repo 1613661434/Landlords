@@ -2,6 +2,7 @@
 #define CARD_H
 
 #include <QVector>
+#include "ol_enum_char_ops.h"
 
 class Card
 {
@@ -36,7 +37,7 @@ public:
         Card_A,
         Card_2,
         Card_SJ, // Small Joker
-        Card_Bj, // Big Joker
+        Card_BJ, // Big Joker
         Card_End
     };
 
@@ -48,6 +49,7 @@ private:
     // == 函数 ==
 public:
     Card();
+    Card(CardPoint point, CardSuit suit);
 
     inline static bool lessSort(const Card& a, const Card& b)
     {

@@ -22,6 +22,7 @@ qt_add_executable(Landlords
     robot.h robot.cpp
     userplayer.h userplayer.cpp
     gamecontrol.h gamecontrol.cpp
+    ol_enum_char_ops.h
 )
 
 target_link_libraries(Landlords

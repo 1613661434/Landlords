@@ -32,6 +32,7 @@ private:
     Player* m_currPlayer;
     Player* m_pendPlayer;
     Cards m_pendCards;
+    Cards m_allCards;
 
 public:
     explicit GameControl(QObject* parent = nullptr);
@@ -40,6 +41,16 @@ public:
     void playerInit();
 
     // 初始化扑克牌
+    void initAllCards();
+
+    // 每次发一张牌
+    inline Card takeOneCard() { return m_allCards.takeRandCard(); }
+
+    // 得到最后的三张底牌
+    inline Cards getSurplusCards() { return m_allCards; }
+
+    // 重置卡牌数据
+    void resetCardData();
 
     // Get&Set
     inline Robot* getLeftRobot() const { return m_robotLeft; }

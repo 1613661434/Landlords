@@ -43,3 +43,31 @@ void GameControl::playerInit()
     // 指定当前玩家
     m_currPlayer = m_user;
 }
+
+void GameControl::initAllCards()
+{
+    m_allCards.clear();
+    for (Card::CardPoint p = Card::CardPoint::Card_Begin + 1; p < Card::Card::CardPoint::Card_SJ; ++p)
+    {
+        for (Card::CardSuit s = Card::CardSuit::Suit_Begin + 1; s < Card::CardSuit::Suit_End; ++s)
+        {
+            Card c(p, s);
+            m_allCards.add(c);
+        }
+    }
+    m_allCards.add(Card(Card::CardPoint::Card_SJ, Card::CardSuit::Suit_Begin));
+    m_allCards.add(Card(Card::CardPoint::Card_BJ, Card::CardSuit::Suit_Begin));
+}
+
+void GameControl::resetCardData()
+{
+    // 洗牌
+    initAllCards();
+    // 清空所有玩家的牌
+    m_robotLeft->clearCards();
+    m_robotRight->clearCards();
+    m_user->clearCards();
+    // 初始化出牌玩家和牌
+    m_pendPlayer = nullptr;
+    m_pendCards.clear();
+}

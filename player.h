@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "cards.h"
+#include "ol_enum_char_ops.h"
 
 class Player : public QObject
 {
