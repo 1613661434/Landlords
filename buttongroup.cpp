@@ -36,4 +36,23 @@ void ButtonGroup::initButtons()
     {
         btns[i]->setFixedSize(90, 45);
     }
+
+    // 连接
+    connect(ui->start, &MyButton::clicked, this, &ButtonGroup::startGame);
+    connect(ui->playCard, &MyButton::clicked, this, &ButtonGroup::playHand);
+    connect(ui->playCard1, &MyButton::clicked, this, &ButtonGroup::playHand);
+    connect(ui->pass, &MyButton::clicked, this, &ButtonGroup::pass);
+    connect(ui->giveUp, &MyButton::clicked, this, [this]()
+            { emit betPoint(0); });
+    connect(ui->oneScore, &MyButton::clicked, this, [this]()
+            { emit betPoint(1); });
+    connect(ui->twoScore, &MyButton::clicked, this, [this]()
+            { emit betPoint(2); });
+    connect(ui->threeScore, &MyButton::clicked, this, [this]()
+            { emit betPoint(3); });
+}
+
+void ButtonGroup::selectPanel(Panel type)
+{
+    ui->stackedWidget->setCurrentIndex((int)type);
 }

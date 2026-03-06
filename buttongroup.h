@@ -13,11 +13,34 @@ class ButtonGroup : public QWidget
     Q_OBJECT
 
 public:
+    enum Panel : char
+    {
+        Start,
+        PlayCard,
+        PassOrPlay,
+        CallLord,
+        Empty
+    };
+
+public:
     explicit ButtonGroup(QWidget* parent = nullptr);
     ~ButtonGroup();
 
     // 初始化按钮
     void initButtons();
+
+    // 处理Page页的切换
+    void selectPanel(Panel type);
+
+signals:
+    // 开始游戏
+    void startGame();
+    // 出牌
+    void playHand();
+    // 不出牌
+    void pass();
+    // 抢地主
+    void betPoint(int point);
 
 private:
     Ui::ButtonGroup* ui;
