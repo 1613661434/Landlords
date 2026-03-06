@@ -28,6 +28,7 @@ qt_add_executable(Landlords
     scorepanel.h scorepanel.cpp scorepanel.ui
     mybutton.h mybutton.cpp
     buttongroup.h buttongroup.cpp buttongroup.ui
+    res.qrc
 )
 
 target_link_libraries(Landlords
