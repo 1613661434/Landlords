@@ -69,6 +69,11 @@ public:
 
     // == 友元函数 ==
     friend inline bool operator==(const Card& a, const Card& b) { return (a.m_suit == b.m_suit) && (a.m_point == b.m_point); }
+    friend inline bool operator!=(const Card& a, const Card& b) { return !(a == b); }
+    friend inline bool operator<(const Card& a, const Card& b) { return Card::lessSort(a, b); }
+    friend inline bool operator>(const Card& a, const Card& b) { return Card::greaterSort(a, b); }
+    friend inline bool operator<=(const Card& a, const Card& b) { return !(a > b); }
+    friend inline bool operator>=(const Card& a, const Card& b) { return !(a < b); }
     friend inline uint qHash(const Card& card, uint seed = 0) { return qHash(static_cast<uint>(card.m_suit), qHash(static_cast<uint>(card.m_point), seed)); }
 };
 

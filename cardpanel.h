@@ -29,23 +29,23 @@ public:
         setFixedSize(m_front.size());
         update();
     }
-    QPixmap getImage() { return m_front; }
+    QPixmap getImage() const { return m_front; }
 
     // 扑克牌显示的面相关
     inline void setFrontSide(bool isFront) { m_isFront = isFront; }
-    inline bool getFrontSide() { return m_isFront; }
+    inline bool getFrontSide() const { return m_isFront; }
 
     // 选中相关
     inline void setSelected(bool isSelected) { m_isSelected = isSelected; }
-    inline bool getSelected() { return m_isSelected; }
+    inline bool getSelected() const { return m_isSelected; }
 
     // 花色和点数相关
-    inline void setCard(Card& card) { m_card = card; }
-    inline Card getCard() { return m_card; }
+    inline void setCard(const Card& card) { m_card = card; }
+    inline Card getCard() const { return m_card; }
 
     // 所有者相关
     inline void setOwner(Player* owner) { m_owner = owner; }
-    inline Player* getOwner() { return m_owner; }
+    inline Player* getOwner() const { return m_owner; }
 
 protected:
     void paintEvent(QPaintEvent* event);

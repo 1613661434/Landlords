@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QPainter>
 #include "gamecontrol.h"
+#include "cardpanel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -19,6 +20,9 @@ private:
     QPixmap m_bkImage;
     GameControl* m_gameCtl;
     QVector<Player*> m_playerList; // 顺序：左侧机器人，右侧机器人，当前玩家
+    QMap<Card, CardPanel*> m_cardMap;
+    QSize m_cardSize;
+    QPixmap m_cardBackImg;
 
 public:
     GamePanel(QWidget* parent = nullptr);
@@ -28,6 +32,10 @@ public:
     void gameControlInit();
     // 更新分数面板的分数
     void updatePlayerScore();
+    // 切割并存储图片
+    void initCardMap();
+    // 裁剪卡牌图片
+    void cropImage(const QPixmap& pixmap, int x, int y, const Card& card);
 
 protected:
     // 绘图
