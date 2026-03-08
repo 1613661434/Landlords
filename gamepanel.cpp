@@ -25,6 +25,8 @@ GamePanel::GamePanel(QWidget* parent)
     initButtonsGroup();
     // 7. 初始化玩家在窗口中的上下文环境
     initPlayerContext();
+    // 8. 扑克牌场景初始化
+    initGameScene();
 }
 
 GamePanel::~GamePanel()
@@ -141,6 +143,35 @@ void GamePanel::initPlayerContext()
         context.roleImg->hide();
         context.roleImg->move(roleImgPos[i]);
         m_contextMap.insert(m_playerList.at(i), context);
+    }
+}
+
+void GamePanel::initGameScene()
+{
+    // 1. 发牌区的扑克牌
+    m_baseCard = new CardPanel(this);
+    m_baseCard->setImage(m_cardBackImg, m_cardBackImg);
+    // 2. 发牌过程中移动的扑克牌
+    m_moveCard = new CardPanel(this);
+    m_moveCard->setImage(m_cardBackImg, m_cardBackImg);
+    // 3. 最后的三张底牌（用于窗口的显示）
+    m_last3Card.reserve(3);
+    for (int i = 0; i < 3; ++i)
+    {
+        CardPanel* panel = new CardPanel(this);
+        panel->setImage(m_cardBackImg, m_cardBackImg);
+        panel->hide();
+        m_last3Card.push_back(panel);
+    }
+    // 扑克牌的位置
+    m_baseCardPos = QPoint((width() - m_cardSize.width()) / 2, (height() - m_cardSize.height()) / 2 - 100);
+    m_baseCard->move(m_baseCardPos);
+    m_moveCard->move(m_baseCardPos);
+
+    int base = (width() - 3 * m_cardSize.width() - 2 * 10) / 2;
+    for (int i = 0; i < 3; ++i)
+    {
+        m_last3Card[i]->move(base + (m_cardSize.width() + 10) * i, 20);
     }
 }
 

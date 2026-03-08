@@ -50,6 +50,10 @@ private:
     QSize m_cardSize;
     QPixmap m_cardBackImg;
     QMap<Player*, PlayerContext> m_contextMap;
+    CardPanel* m_baseCard;
+    CardPanel* m_moveCard;
+    QVector<CardPanel*> m_last3Card;
+    QPoint m_baseCardPos;
 
 public:
     GamePanel(QWidget* parent = nullptr);
@@ -67,6 +71,8 @@ public:
     void initButtonsGroup();
     // 初始化玩家在窗口中的上下文环境
     void initPlayerContext();
+    // 初始化游戏场景
+    void initGameScene();
 
 protected:
     // 绘图
