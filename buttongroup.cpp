@@ -31,8 +31,7 @@ void ButtonGroup::initButtons()
     // 设置按钮的大小
     QVector<MyButton*> btns;
     btns << ui->start << ui->playCard << ui->playCard1 << ui->pass << ui->giveUp << ui->oneScore << ui->twoScore << ui->threeScore;
-    int size = (int)btns.size();
-    for (int i = 0; i < size; ++i)
+    for (int i = 0, size = (int)btns.size(); i < size; ++i)
     {
         btns[i]->setFixedSize(90, 45);
     }

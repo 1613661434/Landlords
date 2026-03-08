@@ -7,6 +7,7 @@
 class MyButton : public QPushButton
 {
     Q_OBJECT
+
 private:
     QString m_normal;
     QString m_hover;

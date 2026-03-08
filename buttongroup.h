@@ -22,6 +22,9 @@ public:
         Empty
     };
 
+private:
+    Ui::ButtonGroup* ui;
+
 public:
     explicit ButtonGroup(QWidget* parent = nullptr);
     ~ButtonGroup();
@@ -41,9 +44,6 @@ signals:
     void pass();
     // 抢地主
     void betPoint(int point);
-
-private:
-    Ui::ButtonGroup* ui;
 };
 
 #endif // BUTTONGROUP_H

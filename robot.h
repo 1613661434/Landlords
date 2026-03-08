@@ -7,6 +7,7 @@
 class Robot : public Player
 {
     Q_OBJECT
+
 public:
     using Player::Player;
     explicit Robot(QObject* parent = nullptr);

@@ -7,6 +7,7 @@
 class UserPlayer : public Player
 {
     Q_OBJECT
+
 public:
     using Player::Player;
     explicit UserPlayer(QObject* parent = nullptr);
