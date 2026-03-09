@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QPainter>
 #include <QLabel>
+#include <QTimer>
 #include "gamecontrol.h"
 #include "cardpanel.h"
 
@@ -55,6 +56,7 @@ private:
     QVector<CardPanel*> m_last3Card;
     QPoint m_baseCardPos;
     GameControl::GameStatus m_gameStatus;
+    QTimer* m_timer;
 
 public:
     GamePanel(QWidget* parent = nullptr);
@@ -78,6 +80,11 @@ public:
     void gameStatusPrecess(GameControl::GameStatus status);
     // 发牌
     void startDispatchCard();
+    // 移动扑克牌
+    void cardMoveStep(Player* player, int curPos);
+
+    // 定时器的处理动作
+    void onDispatchCard();
 
 protected:
     // 绘图
