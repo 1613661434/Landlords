@@ -88,7 +88,14 @@ void GamePanel::initButtonsGroup()
     ui->btnGroup->initButtons();
     ui->btnGroup->selectPanel(ButtonGroup::Panel::Start);
 
-    connect(ui->btnGroup, &ButtonGroup::startGame, this, [this]() {});
+    connect(ui->btnGroup, &ButtonGroup::startGame, this, [this]()
+            {
+                // 界面的初始化
+                ui->btnGroup->selectPanel(ButtonGroup::Panel::Empty);
+                m_gameCtl->clearPlayerScore();
+                updatePlayerScore();
+                // 修改游戏状态 -> 发牌
+            });
     connect(ui->btnGroup, &ButtonGroup::playHand, this, [this]() {});
     connect(ui->btnGroup, &ButtonGroup::pass, this, [this]() {});
     connect(ui->btnGroup, &ButtonGroup::betPoint, this, [this]() {});
@@ -173,6 +180,58 @@ void GamePanel::initGameScene()
     {
         m_last3Card[i]->move(base + (m_cardSize.width() + 10) * i, 20);
     }
+}
+
+void GamePanel::gameStatusPrecess(GameControl::GameStatus status)
+{
+    // 记录游戏状态
+    m_gameStatus = status;
+    // 处理游戏状态
+    switch (status)
+    {
+    case GameControl::GameStatus::DispatchCard:
+        startDispatchCard();
+        break;
+    case GameControl::GameStatus::CallingLord:
+        break;
+    case GameControl::GameStatus::PlayingHand:
+        break;
+    default:
+        break;
+    }
+}
+
+void GamePanel::startDispatchCard()
+{
+    // 重置每张卡牌的属性
+    for (auto it = m_cardMap.begin(); it != m_cardMap.end(); ++it)
+    {
+        it.value()->setSelected(false);
+        it.value()->setFrontSide(true);
+        it.value()->hide();
+    }
+    // 隐藏三张底牌
+    for (int i = 0, size = (int)m_last3Card.size(); i < size; ++i)
+    {
+        m_last3Card.at(i)->hide();
+    }
+    // 重置玩家的窗口上下文信息
+    const int index = m_playerList.indexOf(m_gameCtl->getUserPlayer());
+    for (int i = 0, size = (int)m_playerList.size(); i < size; ++i)
+    {
+        m_contextMap[m_playerList.at(i)].lastCards.clear();
+        m_contextMap[m_playerList.at(i)].info->hide();
+        m_contextMap[m_playerList.at(i)].roleImg->hide();
+        m_contextMap[m_playerList.at(i)].isFrontSide = (i == index ? true : false);
+    }
+    // 重置所有玩家的卡牌数据
+    m_gameCtl->resetCardData();
+    // 显示底牌
+    m_baseCard->show();
+    // 隐藏按钮面板
+    ui->btnGroup->selectPanel(ButtonGroup::Panel::Empty);
+    // 启动定时器
+    // 播放背景音乐
 }
 
 void GamePanel::paintEvent(QPaintEvent* ev)

@@ -54,6 +54,7 @@ private:
     CardPanel* m_moveCard;
     QVector<CardPanel*> m_last3Card;
     QPoint m_baseCardPos;
+    GameControl::GameStatus m_gameStatus;
 
 public:
     GamePanel(QWidget* parent = nullptr);
@@ -73,6 +74,10 @@ public:
     void initPlayerContext();
     // 初始化游戏场景
     void initGameScene();
+    // 处理游戏的状态
+    void gameStatusPrecess(GameControl::GameStatus status);
+    // 发牌
+    void startDispatchCard();
 
 protected:
     // 绘图
