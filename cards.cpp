@@ -1,6 +1,12 @@
 #include "cards.h"
+#include <QDebug>
 
 Cards::Cards() {}
+
+Cards::Cards(const Card& card)
+{
+    m_cards.insert(card);
+}
 
 Card::CardPoint Cards::maxPoint() const
 {

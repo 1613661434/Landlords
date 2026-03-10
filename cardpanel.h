@@ -33,11 +33,11 @@ public:
 
     // 扑克牌显示的面相关
     inline void setFrontSide(bool isFront) { m_isFront = isFront; }
-    inline bool getFrontSide() const { return m_isFront; }
+    inline bool isFrontSide() const { return m_isFront; }
 
     // 选中相关
     inline void setSelected(bool isSelected) { m_isSelected = isSelected; }
-    inline bool getSelected() const { return m_isSelected; }
+    inline bool isSelected() const { return m_isSelected; }
 
     // 花色和点数相关
     inline void setCard(const Card& card) { m_card = card; }

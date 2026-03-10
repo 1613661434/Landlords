@@ -281,6 +281,49 @@ void GamePanel::cardMoveStep(Player* player, int curPos)
     }
 }
 
+void GamePanel::disposCard(Player* player, const Cards& cards)
+{
+    CardList list = cards.toCardList();
+    for (int i = 0, size = (int)list.size(); i < size; ++i)
+    {
+        CardPanel* panel = m_cardMap[list.at(i)];
+        panel->setOwner(player);
+    }
+    // 更新扑克牌在窗口中的显示
+    updatePlayerCards(player);
+}
+
+void GamePanel::updatePlayerCards(Player* player)
+{
+    Cards cards = player->getCards();
+    CardList list = cards.toCardList();
+    // 取出展示扑克牌的区域
+    int cardSpace = 20;
+    QRect cardsRect = m_contextMap[player].cardRect;
+    for (int i = 0, size = (int)list.size(); i < size; ++i)
+    {
+        CardPanel* panel = m_cardMap[list.at(i)];
+        panel->show();
+        panel->raise();
+        panel->setFrontSide(m_contextMap[player].isFrontSide);
+
+        // 水平 or 垂直显示
+        if (m_contextMap[player].align == Horizontal)
+        {
+            int leftX = cardsRect.left() + (cardsRect.width() - (size - 1) * cardSpace - panel->width()) / 2;
+            int topY = cardsRect.top() + (cardsRect.height() - m_cardSize.height()) / 2;
+            if (panel->isSelected()) topY -= 10;
+            panel->move(leftX + cardSpace * i, topY);
+        }
+        else
+        {
+            int leftX = cardsRect.left() + (cardsRect.width() - m_cardSize.width()) / 2;
+            int topY = cardsRect.top() + (cardsRect.height() - (size - 1) * cardSpace - panel->height()) / 2;
+            panel->move(leftX, topY + i * cardSpace);
+        }
+    }
+}
+
 void GamePanel::onDispatchCard()
 {
     // 记录扑克牌的位置
@@ -292,6 +335,7 @@ void GamePanel::onDispatchCard()
         // 给玩家发一张牌
         Card card = m_gameCtl->takeOneCard();
         curPlayer->storeDispatchCard(card);
+        disposCard(curPlayer, Cards(card));
         // 发牌动画
         cardMoveStep(curPlayer, curMovePos);
         // 判断牌是否发完了

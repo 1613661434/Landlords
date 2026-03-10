@@ -5,7 +5,6 @@
 #include <QSet>
 #include <QRandomGenerator>
 #include <algorithm>
-#include <QDebug>
 
 class Cards
 {
@@ -18,11 +17,11 @@ public:
     };
 
 private:
-    QSet<Card>
-        m_cards;
+    QSet<Card> m_cards;
 
 public:
     Cards();
+    Cards(const Card& card);
 
     // 添加扑克牌
     inline void add(const Card& card) { m_cards.insert(card); }
@@ -53,7 +52,7 @@ public:
     inline bool contains(const Card& card) const { return m_cards.contains(card); }            // 某张牌是否在集合中
     inline bool contains(const Cards& cards) const { return m_cards.contains(cards.m_cards); } // 某几张牌是否在集合中
     Card takeRandCard();                                                                       // 随机取一张牌
-    CardList toCardList(SortType type) const;
+    CardList toCardList(SortType type = SortType::Desc) const;
 };
 
 #endif // CARDS_H

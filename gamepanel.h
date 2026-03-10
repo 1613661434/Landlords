@@ -82,6 +82,10 @@ public:
     void startDispatchCard();
     // 移动扑克牌
     void cardMoveStep(Player* player, int curPos);
+    // 处理分发得到的扑克牌
+    void disposCard(Player* player, const Cards& cards);
+    // 更新扑克牌在窗口中的显示
+    void updatePlayerCards(Player* player);
 
     // 定时器的处理动作
     void onDispatchCard();
