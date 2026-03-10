@@ -53,7 +53,11 @@ public:
     void resetCardData();
 
     // 准备叫地主
-    inline void startLordCard() { m_currPlayer->prepareCallLord(); }
+    inline void startLordCard()
+    {
+        m_currPlayer->prepareCallLord();
+        emit playerStatusChanged(m_currPlayer, GameControl::PlayerStatus::ThinkingForCallLord);
+    }
 
     // 成为地主
     void becomeLord(Player* player);
@@ -76,6 +80,7 @@ public:
     inline Player* getPendPlayer() const { return m_pendPlayer; }
     inline Cards getPendCards() const { return m_pendCards; }
 signals:
+    void playerStatusChanged(Player* player, GameControl::PlayerStatus status);
 };
 
 #endif // GAMECONTROL_H

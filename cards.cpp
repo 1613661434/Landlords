@@ -1,5 +1,4 @@
 #include "cards.h"
-#include <QDebug>
 
 Cards::Cards() {}
 
@@ -77,9 +76,6 @@ CardList Cards::toCardList(SortType type) const
         std::sort(list.begin(), list.end(), Card::greaterSort);
         break;
     case SortType::NoSort:
-        break;
-    default:
-        qWarning() << "Unknown SortType: " << static_cast<int>(type);
         break;
     }
 

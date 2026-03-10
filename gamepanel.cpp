@@ -44,6 +44,8 @@ void GamePanel::gameControlInit()
     m_gameCtl->playerInit();
     // 得到三个玩家的实例对象（顺序：左侧机器人，右侧机器人，当前玩家）
     m_playerList << m_gameCtl->getLeftRobot() << m_gameCtl->getRightRobot() << m_gameCtl->getUserPlayer();
+
+    connect(m_gameCtl, &GameControl::playerStatusChanged, this, &GamePanel::onPlayerStatusChanged);
 }
 
 void GamePanel::updatePlayerScore()
@@ -197,10 +199,21 @@ void GamePanel::gameStatusPrecess(GameControl::GameStatus status)
         startDispatchCard();
         break;
     case GameControl::GameStatus::CallingLord:
+    {
+        // 取出底牌数据
+        CardList last3Card = m_gameCtl->getSurplusCards().toCardList();
+        // 给底牌窗口设置图片
+        for (int i = 0, size = (int)last3Card.size(); i < size; ++i)
+        {
+            QPixmap front = m_cardMap[last3Card.at(i)]->getImage();
+            m_last3Card[i]->setImage(front, m_cardBackImg);
+            m_last3Card[i]->hide();
+        }
+        // 开始叫地主
+        m_gameCtl->startLordCard();
         break;
+    }
     case GameControl::GameStatus::PlayingHand:
-        break;
-    default:
         break;
     }
 }
@@ -335,8 +348,8 @@ void GamePanel::onDispatchCard()
         // 给玩家发一张牌
         Card card = m_gameCtl->takeOneCard();
         curPlayer->storeDispatchCard(card);
-        disposCard(curPlayer, Cards(card));
         // 发牌动画
+        disposCard(curPlayer, Cards(card));
         cardMoveStep(curPlayer, curMovePos);
         // 判断牌是否发完了
         if (m_gameCtl->getSurplusCards().cardCount() == 3)
@@ -345,18 +358,38 @@ void GamePanel::onDispatchCard()
             m_timer->stop();
             // 重置扑克牌位置
             curMovePos = 0;
+            // 切换为用户玩家
+            m_gameCtl->setCurrentPlayer(m_gameCtl->getUserPlayer());
             // 切换游戏状态 -> 叫地主
             gameStatusPrecess(GameControl::GameStatus::CallingLord);
             return;
         }
+        // 重置扑克牌位置
+        curMovePos = 0;
         // 切换玩家
         m_gameCtl->setCurrentPlayer(curPlayer->getNextPlayer());
-        curMovePos = 0;
         return;
     }
     // 移动扑克牌
     cardMoveStep(curPlayer, curMovePos);
     curMovePos += 15;
+}
+
+void GamePanel::onPlayerStatusChanged(Player* player, GameControl::PlayerStatus status)
+{
+    switch (status)
+    {
+    case GameControl::PlayerStatus::ThinkingForCallLord:
+        if (player == m_gameCtl->getUserPlayer())
+        {
+            ui->btnGroup->selectPanel(ButtonGroup::Panel::CallLord);
+        }
+        break;
+    case GameControl::PlayerStatus::ThinkingForPlayHand:
+        break;
+    case GameControl::PlayerStatus::Winning:
+        break;
+    }
 }
 
 void GamePanel::paintEvent(QPaintEvent* ev)
