@@ -24,6 +24,21 @@ public:
         ThinkingForPlayHand, // 考虑出牌
         Winning              // 获胜
     };
+    // 叫地主保存的数据
+    struct BetRecord
+    {
+        Player* player;
+        int point;
+        int times; // 第几次叫地主
+
+        BetRecord() { reset(); }
+        void reset()
+        {
+            player = nullptr;
+            point = 0;
+            times = 0;
+        }
+    };
 
 private:
     Robot* m_robotLeft;
@@ -33,6 +48,7 @@ private:
     Player* m_pendPlayer;
     Cards m_pendCards;
     Cards m_allCards;
+    BetRecord m_betRecord;
 
 public:
     explicit GameControl(QObject* parent = nullptr);
@@ -66,6 +82,7 @@ public:
     void clearPlayerScore();
 
     // 处理叫地主
+    void onGrabBet(Player* player, int point);
 
     // 处理出牌
 
@@ -79,8 +96,14 @@ public:
 
     inline Player* getPendPlayer() const { return m_pendPlayer; }
     inline Cards getPendCards() const { return m_pendCards; }
+
 signals:
+    // 玩家状态变化
     void playerStatusChanged(Player* player, GameControl::PlayerStatus status);
+    // 通知玩家抢地主了
+    void notifyGrabLordBet(Player* player, int point);
+    // 游戏状态变化
+    void gameStatusChanged(GameControl::GameStatus status);
 };
 
 #endif // GAMECONTROL_H

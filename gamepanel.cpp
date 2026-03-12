@@ -104,7 +104,8 @@ void GamePanel::initButtonsGroup()
                 gameStatusPrecess(GameControl::GameStatus::DispatchCard); });
     connect(ui->btnGroup, &ButtonGroup::playHand, this, [this]() {});
     connect(ui->btnGroup, &ButtonGroup::pass, this, [this]() {});
-    connect(ui->btnGroup, &ButtonGroup::betPoint, this, [this]() {});
+    connect(ui->btnGroup, &ButtonGroup::betPoint, this, [this](int point)
+            { m_gameCtl->getUserPlayer()->grabLordBet(point); });
 }
 
 void GamePanel::initPlayerContext()

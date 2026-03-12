@@ -92,7 +92,7 @@ public:
     inline Player* getNextPlayer() const { return m_next; }
 
     // 抢地主
-    inline void grabLordBet(int point) { /*WILL DO*/ };
+    inline void grabLordBet(int point) { emit notifyGrabLordBet(this, point); };
 
     // 存储扑克牌（发牌阶段）
     inline void storeDispatchCard(Card& card) { m_cards.add(card); }
@@ -115,7 +115,11 @@ public:
 public:
     virtual void prepareCallLord() = 0; // 准备叫地主
     virtual void preparePlayHand() = 0; // 准备出牌
+
+    // == 信号 ==
 signals:
+    // 通知已经叫地主下注
+    void notifyGrabLordBet(Player* player, int point);
 };
 
 #endif // PLAYER_H
