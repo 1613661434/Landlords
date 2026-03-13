@@ -91,6 +91,8 @@ public:
     void onDispatchCard();
     // 处理玩家状态的变化
     void onPlayerStatusChanged(Player* player, GameControl::PlayerStatus status);
+    // 处理玩家抢地主
+    void onGrabLordBet(Player* player, int point, bool isFirst);
 
 protected:
     // 绘图

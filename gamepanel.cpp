@@ -46,6 +46,7 @@ void GamePanel::gameControlInit()
     m_playerList << m_gameCtl->getLeftRobot() << m_gameCtl->getRightRobot() << m_gameCtl->getUserPlayer();
 
     connect(m_gameCtl, &GameControl::playerStatusChanged, this, &GamePanel::onPlayerStatusChanged);
+    connect(m_gameCtl, &GameControl::notifyGrabLordBet, this, &GamePanel::onGrabLordBet);
 }
 
 void GamePanel::updatePlayerScore()
@@ -391,6 +392,30 @@ void GamePanel::onPlayerStatusChanged(Player* player, GameControl::PlayerStatus 
     case GameControl::PlayerStatus::Winning:
         break;
     }
+}
+
+void GamePanel::onGrabLordBet(Player* player, int point, bool isFirst)
+{
+    // 显示抢地主的信息提示
+    PlayerContext context = m_contextMap[player];
+    if (point == 0)
+    {
+        context.info->setPixmap(QPixmap(":/images/buqiang.png"));
+    }
+    else
+    {
+        if (isFirst)
+        {
+            context.info->setPixmap(QPixmap(":/images/jiaodizhu.png"));
+        }
+        else
+        {
+            context.info->setPixmap(QPixmap(":/images/qiangdizhu.png"));
+        }
+    }
+    context.info->show();
+    // 显示抢地主的分数
+    // 播放分数的背景音乐
 }
 
 void GamePanel::paintEvent(QPaintEvent* ev)

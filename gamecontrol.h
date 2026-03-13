@@ -101,7 +101,7 @@ signals:
     // 玩家状态变化
     void playerStatusChanged(Player* player, GameControl::PlayerStatus status);
     // 通知玩家抢地主了
-    void notifyGrabLordBet(Player* player, int point);
+    void notifyGrabLordBet(Player* player, int point, bool isFirst);
     // 游戏状态变化
     void gameStatusChanged(GameControl::GameStatus status);
 };

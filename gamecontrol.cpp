@@ -104,7 +104,21 @@ void GameControl::clearPlayerScore()
 void GameControl::onGrabBet(Player* player, int point)
 {
     // 1. 通知主界面玩家叫地主了（更新信息提示）
-    emit notifyGrabLordBet(player, point);
+    if (point == 0 || m_betRecord.point >= point)
+    {
+        // 不抢或无效的
+        emit notifyGrabLordBet(player, 0, false);
+    }
+    else if (point > 0 && m_betRecord.point == 0)
+    {
+        // 第一个叫地主的玩家
+        emit notifyGrabLordBet(player, point, true);
+    }
+    else
+    {
+        // 第二三个抢地主的玩家
+        emit notifyGrabLordBet(player, point, false);
+    }
     // 2. 判断玩家下注是不是3分，如果是抢地主结束
     if (point == 3)
     {
