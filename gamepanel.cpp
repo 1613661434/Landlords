@@ -47,6 +47,7 @@ void GamePanel::gameControlInit()
 
     connect(m_gameCtl, &GameControl::playerStatusChanged, this, &GamePanel::onPlayerStatusChanged);
     connect(m_gameCtl, &GameControl::notifyGrabLordBet, this, &GamePanel::onGrabLordBet);
+    connect(m_gameCtl, &GameControl::gameStatusChanged, this, &GamePanel::gameStatusPrecess);
 }
 
 void GamePanel::updatePlayerScore()
@@ -384,7 +385,7 @@ void GamePanel::onPlayerStatusChanged(Player* player, GameControl::PlayerStatus 
     case GameControl::PlayerStatus::ThinkingForCallLord:
         if (player == m_gameCtl->getUserPlayer())
         {
-            ui->btnGroup->selectPanel(ButtonGroup::Panel::CallLord);
+            ui->btnGroup->selectPanel(ButtonGroup::Panel::CallLord, m_gameCtl->getPlayerMaxBet());
         }
         break;
     case GameControl::PlayerStatus::ThinkingForPlayHand:

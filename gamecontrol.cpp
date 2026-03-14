@@ -152,6 +152,6 @@ void GameControl::onGrabBet(Player* player, int point)
     // 4. 切换玩家，通知下一个玩家继续抢地主
     m_currPlayer = player->getNextPlayer();
     // 发送信号给主界面，告知当前状态为抢地主
-    playerStatusChanged(m_currPlayer, GameControl::PlayerStatus::ThinkingForCallLord);
+    emit playerStatusChanged(m_currPlayer, GameControl::PlayerStatus::ThinkingForCallLord);
     m_currPlayer->prepareCallLord();
 }

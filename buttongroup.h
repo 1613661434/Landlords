@@ -32,8 +32,8 @@ public:
     // 初始化按钮
     void initButtons();
 
-    // 处理Page页的切换
-    void selectPanel(Panel type);
+    // 处理Page页的切换（point只有type为CallLord才有用）
+    void selectPanel(ButtonGroup::Panel type, int point = 0);
 
 signals:
     // 开始游戏

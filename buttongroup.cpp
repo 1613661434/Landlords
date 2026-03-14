@@ -51,7 +51,27 @@ void ButtonGroup::initButtons()
             { emit betPoint(3); });
 }
 
-void ButtonGroup::selectPanel(Panel type)
+void ButtonGroup::selectPanel(ButtonGroup::Panel type, int point)
 {
     ui->stackedWidget->setCurrentIndex((int)type);
+
+    if (type != ButtonGroup::Panel::CallLord) return;
+    if (point == 0)
+    {
+        ui->oneScore->setVisible(true);
+        ui->twoScore->setVisible(true);
+        ui->threeScore->setVisible(true);
+    }
+    else if (point == 1)
+    {
+        ui->oneScore->setVisible(false);
+        ui->twoScore->setVisible(true);
+        ui->threeScore->setVisible(true);
+    }
+    else // point == 2
+    {
+        ui->oneScore->setVisible(false);
+        ui->twoScore->setVisible(false);
+        ui->threeScore->setVisible(true);
+    }
 }

@@ -81,6 +81,9 @@ public:
     // 清空所有玩家的得分
     void clearPlayerScore();
 
+    // 得到玩家下注的最高分数
+    inline int getPlayerMaxBet() { return m_betRecord.point; }
+
     // 处理叫地主
     void onGrabBet(Player* player, int point);
 
