@@ -41,6 +41,10 @@ private:
     HandType m_type;
     Card::CardPoint m_point;
     int m_extra;
+    QVector<Card::CardPoint> m_oneCard;
+    QVector<Card::CardPoint> m_twoCard;
+    QVector<Card::CardPoint> m_threeCard;
+    QVector<Card::CardPoint> m_fourCard;
 
 public:
     PlayHand();
@@ -49,7 +53,7 @@ public:
     PlayHand(PlayHand::HandType type, Card::CardPoint point, int extra);
 
     // 1. 对扑克牌进行分类：1张，2张，3张，4张有多少种
-    void classify(Cards& cards);
+    void classify(const Cards& cards);
 
     // 2. 对牌型进行分类
     void judgeCardType();
