@@ -10,7 +10,7 @@ PlayHand::PlayHand(Cards& cards)
     judgeCardType();
 }
 
-PlayHand::PlayHand(PlayHand::HandType type, Card::CardPoint point, int extra) : m_type(type), m_point(point), m_extra(extra) {}
+PlayHand::PlayHand(HandType type, Card::CardPoint point, int extra) : m_type(type), m_point(point), m_extra(extra) {}
 
 void PlayHand::classify(const Cards& cards)
 {
@@ -51,4 +51,90 @@ void PlayHand::classify(const Cards& cards)
 
 void PlayHand::judgeCardType()
 {
+}
+
+bool PlayHand::isSingle() const
+{
+    if (m_oneCard.size() == 1 && m_twoCard.isEmpty() && m_threeCard.isEmpty() && m_fourCard.isEmpty())
+    {
+        return true;
+    }
+    return false;
+}
+
+bool PlayHand::isPair() const
+{
+    if (m_oneCard.isEmpty() && m_twoCard.size() == 1 && m_threeCard.isEmpty() && m_fourCard.isEmpty())
+    {
+        return true;
+    }
+    return false;
+}
+
+bool PlayHand::isTriple() const
+{
+    if (m_oneCard.isEmpty() && m_twoCard.isEmpty() && m_threeCard.size() == 1 && m_fourCard.isEmpty())
+    {
+        return true;
+    }
+    return false;
+}
+
+bool PlayHand::isTripleSingle() const
+{
+    if (m_oneCard.size() == 1 && m_twoCard.isEmpty() && m_threeCard.size() == 1 && m_fourCard.isEmpty())
+    {
+        return true;
+    }
+    return false;
+}
+
+bool PlayHand::isTriplePair() const
+{
+    if (m_oneCard.isEmpty() && m_twoCard.size() == 1 && m_threeCard.size() == 1 && m_fourCard.isEmpty())
+    {
+        return true;
+    }
+    return false;
+}
+
+bool PlayHand::isPlane()
+{
+    if (m_oneCard.isEmpty() && m_twoCard.isEmpty() && m_threeCard.size() == 2 && m_fourCard.isEmpty())
+    {
+        std::sort(m_threeCard.begin(), m_threeCard.end(), std::less<Card::CardPoint>());
+        if ((int)m_threeCard[1] - (int)m_threeCard[0] == 1 && m_threeCard[1] < Card::CardPoint::Card_2)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PlayHand::isPlaneTwoSingle()
+{
+    if (m_oneCard.size() == 2 && m_twoCard.isEmpty() && m_threeCard.size() == 2 && m_fourCard.isEmpty())
+    {
+        std::sort(m_oneCard.begin(), m_oneCard.end(), std::less<Card::CardPoint>());
+        std::sort(m_threeCard.begin(), m_threeCard.end(), std::less<Card::CardPoint>());
+        if ((int)m_threeCard[1] - (int)m_threeCard[0] == 1 && m_threeCard[1] < Card::CardPoint::Card_2 &&
+            m_oneCard[0] != Card::CardPoint::Card_SJ && m_oneCard[1] != Card::CardPoint::Card_BJ)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PlayHand::isPlaneTwoPair()
+{
+    if (m_oneCard.isEmpty() && m_twoCard.size() == 2 && m_threeCard.size() == 2 && m_fourCard.isEmpty())
+    {
+        std::sort(m_threeCard.begin(), m_threeCard.end(), std::less<Card::CardPoint>());
+        if ((int)m_threeCard[1] - (int)m_threeCard[0] == 1 && m_threeCard[1] < Card::CardPoint::Card_2)
+        {
+            return true;
+        }
+    }
+    return false;
 }

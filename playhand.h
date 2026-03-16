@@ -50,7 +50,7 @@ public:
     PlayHand();
     // 传递给类一组牌, 通过类分析出牌型, 点数, 以及相关的附属信息(比如顺子: 记录牌的数量)
     explicit PlayHand(Cards& cards);
-    PlayHand(PlayHand::HandType type, Card::CardPoint point, int extra);
+    PlayHand(HandType type, Card::CardPoint point, int extra);
 
     // 1. 对扑克牌进行分类：1张，2张，3张，4张有多少种
     void classify(const Cards& cards);
@@ -59,9 +59,30 @@ public:
     void judgeCardType();
 
     // 得到牌的属性信息
-    inline PlayHand::HandType getHandType() { return m_type; }
+    inline HandType getHandType() { return m_type; }
     inline Card::CardPoint getCardPoint() { return m_point; }
     inline int getExtra() { return m_extra; }
+
+    // 判断牌的类型
+    bool isPass();                // 放弃出牌
+    bool isSingle() const;        // 单
+    bool isPair() const;          // 对
+    bool isTriple() const;        // 三个(相同)
+    bool isTripleSingle() const;  // 三带一
+    bool isTriplePair() const;    // 三带二
+    bool isPlane();               // 飞机
+    bool isPlaneTwoSingle();      // 飞机带两单
+    bool isPlaneTwoPair();        // 飞机带两对
+    bool isSeqPair();             // 连对
+    bool isSeqSingle();           // 顺子
+    bool isBomb();                // 炸弹
+    bool isBombSingle();          // 炸弹带一单
+    bool isBombPair();            // 炸弹带一对
+    bool isBombTwoSingle();       // 炸弹带两单
+    bool isBombJokers();          // 王炸
+    bool isBombJokersSingle();    // 王炸带一单
+    bool isBombJokersPair();      // 王炸带一对
+    bool isBombJokersTwoSingle(); // 王炸带两单
 };
 
 #endif // PLAYHAND_H
