@@ -75,9 +75,9 @@ public:
     bool isPlaneTwoPair();        // 飞机带两对
     bool isSeqPair();             // 连对
     bool isSeqSingle();           // 顺子
-    bool isBomb();                // 炸弹
-    bool isBombSingle();          // 炸弹带一单
-    bool isBombPair();            // 炸弹带一对
+    bool isBomb() const;          // 炸弹
+    bool isBombSingle() const;    // 炸弹带一单
+    bool isBombPair() const;      // 炸弹带一对
     bool isBombTwoSingle();       // 炸弹带两单
     bool isBombJokers();          // 王炸
     bool isBombJokersSingle();    // 王炸带一单

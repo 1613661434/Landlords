@@ -138,3 +138,123 @@ bool PlayHand::isPlaneTwoPair()
     }
     return false;
 }
+
+bool PlayHand::isSeqPair()
+{
+    if (m_oneCard.isEmpty() && m_twoCard.size() >= 3 && m_threeCard.isEmpty() && m_fourCard.isEmpty())
+    {
+        std::sort(m_twoCard.begin(), m_twoCard.end(), std::less<Card::CardPoint>());
+        if ((int)m_twoCard.last() - (int)m_twoCard.first() == (m_twoCard.size() - 1) &&
+            m_twoCard.first() >= Card::CardPoint::Card_3 && m_twoCard.last() < Card::CardPoint::Card_2)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PlayHand::isSeqSingle()
+{
+    if (m_oneCard.size() >= 5 && m_twoCard.isEmpty() && m_threeCard.isEmpty() && m_fourCard.isEmpty())
+    {
+        std::sort(m_oneCard.begin(), m_oneCard.end(), std::less<Card::CardPoint>());
+        if ((int)m_oneCard.last() - (int)m_oneCard.first() == (m_oneCard.size() - 1) &&
+            m_oneCard.first() >= Card::CardPoint::Card_3 && m_oneCard.last() < Card::CardPoint::Card_2)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PlayHand::isBomb() const
+{
+    if (m_oneCard.isEmpty() && m_twoCard.isEmpty() && m_threeCard.isEmpty() && m_fourCard.size() == 1)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool PlayHand::isBombSingle() const
+{
+    if (m_oneCard.size() == 1 && m_twoCard.isEmpty() && m_threeCard.isEmpty() && m_fourCard.size() == 1)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool PlayHand::isBombPair() const
+{
+    if (m_oneCard.isEmpty() && m_twoCard.size() == 1 && m_threeCard.isEmpty() && m_fourCard.size() == 1)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool PlayHand::isBombTwoSingle()
+{
+    if (m_oneCard.size() == 2 && m_twoCard.isEmpty() && m_threeCard.isEmpty() && m_fourCard.size() == 1)
+    {
+        std::sort(m_oneCard.begin(), m_oneCard.end(), std::less<Card::CardPoint>());
+        if (m_oneCard[0] != Card::CardPoint::Card_SJ && m_oneCard[1] != Card::CardPoint::Card_BJ)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PlayHand::isBombJokers()
+{
+    if (m_oneCard.size() == 2 && m_twoCard.isEmpty() && m_threeCard.isEmpty() && m_fourCard.isEmpty())
+    {
+        std::sort(m_oneCard.begin(), m_oneCard.end(), std::less<Card::CardPoint>());
+        if (m_oneCard[0] == Card::CardPoint::Card_SJ && m_oneCard[1] == Card::CardPoint::Card_BJ)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PlayHand::isBombJokersSingle()
+{
+    if (m_oneCard.size() == 3 && m_twoCard.isEmpty() && m_threeCard.isEmpty() && m_fourCard.isEmpty())
+    {
+        std::sort(m_oneCard.begin(), m_oneCard.end(), std::less<Card::CardPoint>());
+        if (m_oneCard[1] == Card::CardPoint::Card_SJ && m_oneCard[2] == Card::CardPoint::Card_BJ)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PlayHand::isBombJokersPair()
+{
+    if (m_oneCard.size() == 2 && m_twoCard.size() == 1 && m_threeCard.isEmpty() && m_fourCard.isEmpty())
+    {
+        std::sort(m_oneCard.begin(), m_oneCard.end(), std::less<Card::CardPoint>());
+        if (m_oneCard[0] == Card::CardPoint::Card_SJ && m_oneCard[1] == Card::CardPoint::Card_BJ)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PlayHand::isBombJokersTwoSingle()
+{
+    if (m_oneCard.size() == 4 && m_twoCard.isEmpty() && m_threeCard.isEmpty() && m_fourCard.isEmpty())
+    {
+        std::sort(m_oneCard.begin(), m_oneCard.end(), std::less<Card::CardPoint>());
+        if (m_oneCard[2] == Card::CardPoint::Card_SJ && m_oneCard[3] == Card::CardPoint::Card_BJ)
+        {
+            return true;
+        }
+    }
+    return false;
+}
