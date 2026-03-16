@@ -52,19 +52,20 @@ public:
     explicit PlayHand(Cards& cards);
     PlayHand(HandType type, Card::CardPoint point, int extra);
 
+    // 得到牌的属性信息
+    inline HandType getHandType() { return m_type; }
+    inline Card::CardPoint getCardPoint() { return m_point; }
+    inline int getExtra() { return m_extra; }
+
+private:
     // 1. 对扑克牌进行分类：1张，2张，3张，4张有多少种
     void classify(const Cards& cards);
 
     // 2. 对牌型进行分类
     void judgeCardType();
 
-    // 得到牌的属性信息
-    inline HandType getHandType() { return m_type; }
-    inline Card::CardPoint getCardPoint() { return m_point; }
-    inline int getExtra() { return m_extra; }
-
     // 判断牌的类型
-    bool isPass();                // 放弃出牌
+    bool isPass() const;          // 放弃出牌
     bool isSingle() const;        // 单
     bool isPair() const;          // 对
     bool isTriple() const;        // 三个(相同)

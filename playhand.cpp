@@ -51,6 +51,120 @@ void PlayHand::classify(const Cards& cards)
 
 void PlayHand::judgeCardType()
 {
+    m_type = HandType::Hand_Unknown;
+    m_point = Card::CardPoint::Card_Begin;
+    m_extra = 0;
+
+    if (isPass())
+    {
+        m_type = HandType::Hand_Pass;
+    }
+    else if (isSingle())
+    {
+        m_type = HandType::Hand_Single;
+        m_point = m_oneCard[0];
+    }
+    else if (isPair())
+    {
+        m_type = HandType::Hand_Pair;
+        m_point = m_twoCard[0];
+    }
+    else if (isTriple())
+    {
+        m_type = HandType::Hand_Triple;
+        m_point = m_threeCard[0];
+    }
+    else if (isTripleSingle())
+    {
+        m_type = HandType::Hand_Triple_Single;
+        m_point = m_threeCard[0];
+    }
+    else if (isTriplePair())
+    {
+        m_type = HandType::Hand_Triple_Pair;
+        m_point = m_threeCard[0];
+    }
+    else if (isPlane())
+    {
+        m_type = HandType::Hand_Plane;
+        // 记录点数最小的牌
+        m_point = m_threeCard[0];
+    }
+    else if (isPlaneTwoSingle())
+    {
+        m_type = HandType::Hand_Plane_Two_Single;
+        // 记录点数最小的牌
+        m_point = m_threeCard[0];
+    }
+    else if (isPlaneTwoPair())
+    {
+        m_type = HandType::Hand_Plane_Two_Pair;
+        // 记录点数最小的牌
+        m_point = m_threeCard[0];
+    }
+    else if (isSeqPair())
+    {
+        m_type = HandType::Hand_Seq_Pair;
+        // 记录点数最小的牌
+        m_point = m_twoCard[0];
+        m_extra = m_twoCard.size();
+    }
+    else if (isSeqSingle())
+    {
+        m_type = HandType::Hand_Seq_Single;
+        // 记录点数最小的牌
+        m_point = m_oneCard[0];
+        m_extra = m_oneCard.size();
+    }
+    else if (isBomb())
+    {
+        m_type = HandType::Hand_Bomb;
+        // 记录点数最小的牌
+        m_point = m_fourCard[0];
+    }
+    else if (isBombSingle())
+    {
+        m_type = HandType::Hand_Bomb_Single;
+        // 记录点数最小的牌
+        m_point = m_fourCard[0];
+    }
+    else if (isBombPair())
+    {
+        m_type = HandType::Hand_Bomb_Pair;
+        // 记录点数最小的牌
+        m_point = m_fourCard[0];
+    }
+    else if (isBombTwoSingle())
+    {
+        m_type = HandType::Hand_Bomb_Two_Single;
+        // 记录点数最小的牌
+        m_point = m_fourCard[0];
+    }
+    else if (isBombJokers())
+    {
+        m_type = HandType::Hand_Bomb_Jokers;
+    }
+    else if (isBombJokersSingle())
+    {
+        m_type = HandType::Hand_Bomb_Jokers_Single;
+    }
+    else if (isBombJokersPair())
+    {
+        m_type = HandType::Hand_Bomb_Jokers_Pair;
+    }
+    else if (isBombJokersTwoSingle())
+    {
+        m_type = HandType::Hand_Bomb_Jokers_Two_Single;
+    }
+}
+
+bool PlayHand::isPass() const
+{
+    if (m_oneCard.isEmpty() && m_twoCard.isEmpty() && m_threeCard.isEmpty() && m_fourCard.isEmpty())
+    {
+        return true;
+    }
+    return false;
 }
 
 bool PlayHand::isSingle() const
