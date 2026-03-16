@@ -63,7 +63,7 @@ public:
     inline Card takeOneCard() { return m_allCards.takeRandCard(); }
 
     // 得到最后的三张底牌
-    inline Cards getSurplusCards() { return m_allCards; }
+    inline Cards getSurplusCards() const { return m_allCards; }
 
     // 重置卡牌数据
     void resetCardData();
@@ -82,7 +82,7 @@ public:
     void clearPlayerScore();
 
     // 得到玩家下注的最高分数
-    inline int getPlayerMaxBet() { return m_betRecord.point; }
+    inline int getPlayerMaxBet() const { return m_betRecord.point; }
 
     // 处理叫地主
     void onGrabBet(Player* player, int point);

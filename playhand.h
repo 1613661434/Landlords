@@ -53,9 +53,12 @@ public:
     PlayHand(HandType type, Card::CardPoint point, int extra);
 
     // 得到牌的属性信息
-    inline HandType getHandType() { return m_type; }
-    inline Card::CardPoint getCardPoint() { return m_point; }
-    inline int getExtra() { return m_extra; }
+    inline HandType getHandType() const { return m_type; }
+    inline Card::CardPoint getCardPoint() const { return m_point; }
+    inline int getExtra() const { return m_extra; }
+
+    // 比较自己的牌和其他人的牌的大小
+    bool canBeat(const PlayHand& other) const;
 
 private:
     // 1. 对扑克牌进行分类：1张，2张，3张，4张有多少种

@@ -12,6 +12,42 @@ PlayHand::PlayHand(Cards& cards)
 
 PlayHand::PlayHand(HandType type, Card::CardPoint point, int extra) : m_type(type), m_point(point), m_extra(extra) {}
 
+bool PlayHand::canBeat(const PlayHand& other) const
+{
+    // 牌型是未知的
+    if (m_type == HandType::Hand_Unknown || other.m_type == HandType::Hand_Unknown)
+    {
+        return false;
+    }
+    // 对方放弃出牌
+    if (other.m_type == HandType::Hand_Pass)
+    {
+        return true;
+    }
+    // 我是王炸
+    if (m_type == HandType::Hand_Bomb_Jokers)
+    {
+        return true;
+    }
+    if (m_type == HandType::Hand_Bomb && other.m_type >= HandType::Hand_Single && other.m_type <= HandType::Hand_Seq_Single)
+    {
+        return true;
+    }
+    // 双方的牌型一致
+    if (m_type == other.m_type)
+    {
+        if (m_type == HandType::Hand_Seq_Pair || m_type == HandType::Hand_Seq_Single)
+        {
+            return m_point > other.m_point && m_extra == other.m_extra;
+        }
+        else
+        {
+            return m_point > other.m_point;
+        }
+    }
+    return false;
+}
+
 void PlayHand::classify(const Cards& cards)
 {
     CardList list = cards.toCardList();
