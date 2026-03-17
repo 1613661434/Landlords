@@ -32,6 +32,7 @@ qt_add_executable(Landlords
     buttongroup.h buttongroup.cpp buttongroup.ui
     res.qrc
     playhand.h playhand.cpp
+    strategy.h strategy.cpp
 )
 
 target_link_libraries(Landlords
