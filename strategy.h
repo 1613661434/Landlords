@@ -29,7 +29,11 @@ public:
     // 7. 根据点数范围找牌
     Cards getRangeCards(Card::CardPoint begin, Card::CardPoint end) const;
     // 8. 按牌型找牌，并且指定要找的牌是否要大过指定的牌型
-    QVector<Cards> findCardType(PlayHand hand, bool beat);
+    QVector<Cards> findCardType(PlayHand hand, bool beat) const;
+
+private:
+    // 从指定起始点数开始，向后查找所有数量恰好为number的同点数牌组
+    QVector<Cards> findCardsByCountFromPoint(Card::CardPoint point, int number) const;
 };
 
 #endif // STRATEGY_H
