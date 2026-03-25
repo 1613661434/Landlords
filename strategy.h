@@ -33,7 +33,10 @@ public:
 
 private:
     // 从指定起始点数开始，向后查找所有数量恰好为number的同点数牌组
-    QVector<Cards> findCardsByCountFromPoint(Card::CardPoint point, int number) const;
+    QVector<Cards> getCardsByCountFromPoint(Card::CardPoint point, int number) const;
+
+    // 找三带一或者三带二，type只能Hand_Single或Hand_Pair
+    QVector<Cards> getTripleSingleOrPair(Card::CardPoint begin, PlayHand::HandType type) const;
 };
 
 #endif // STRATEGY_H

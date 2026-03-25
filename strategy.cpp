@@ -76,13 +76,15 @@ QVector<Cards> Strategy::findCardType(PlayHand hand, bool beat) const
     switch (type)
     {
     case PlayHand::Hand_Single:
-        return findCardsByCountFromPoint(beginPoint, 1); // BUG：按道理应该相同点数但是花色大的也加入，先这样子
+        return getCardsByCountFromPoint(beginPoint, 1); // BUG：按道理应该相同点数但是花色大的也加入，先这样子
     case PlayHand::Hand_Pair:
-        return findCardsByCountFromPoint(beginPoint, 2);
+        return getCardsByCountFromPoint(beginPoint, 2);
     case PlayHand::Hand_Triple:
-        return findCardsByCountFromPoint(beginPoint, 3);
+        return getCardsByCountFromPoint(beginPoint, 3);
     case PlayHand::Hand_Triple_Single:
+        return getTripleSingleOrPair(beginPoint, PlayHand::HandType::Hand_Single);
     case PlayHand::Hand_Triple_Pair:
+        return getTripleSingleOrPair(beginPoint, PlayHand::HandType::Hand_Pair);
     case PlayHand::Hand_Plane:
     case PlayHand::Hand_Plane_Two_Single:
     case PlayHand::Hand_Plane_Two_Pair:
@@ -94,7 +96,7 @@ QVector<Cards> Strategy::findCardType(PlayHand hand, bool beat) const
     }
 }
 
-QVector<Cards> Strategy::findCardsByCountFromPoint(Card::CardPoint point, int number) const
+QVector<Cards> Strategy::getCardsByCountFromPoint(Card::CardPoint point, int number) const
 {
     QVector<Cards> findCardsArray;
 
@@ -107,4 +109,34 @@ QVector<Cards> Strategy::findCardsByCountFromPoint(Card::CardPoint point, int nu
     }
 
     return findCardsArray;
+}
+
+QVector<Cards> Strategy::getTripleSingleOrPair(Card::CardPoint begin, PlayHand::HandType type) const
+{
+    if (type != PlayHand::HandType::Hand_Single && type != PlayHand::HandType::Hand_Pair) return QVector<Cards>();
+
+    // 找到点数相同的三张牌
+    QVector<Cards> findCardArray = getCardsByCountFromPoint(begin, 3);
+    if (findCardArray.isEmpty()) return findCardArray;
+
+    // 将找到的牌从用户手中删除
+    Cards remainCards = m_cards;
+    remainCards.remove(findCardArray);
+
+    // 搜索牌型(单牌或者成对的牌)
+    Strategy st(m_player, remainCards);
+    QVector<Cards> cardsArray = st.findCardType(PlayHand(type, Card::CardPoint::Card_Begin), false);
+    if (cardsArray.isEmpty()) return cardsArray;
+
+    // 将找到的牌和三张点数相同的牌进行组合
+    switch (type)
+    {
+    case PlayHand::HandType::Hand_Pair:
+        findCardArray[1].add(cardsArray.at(1));
+    case PlayHand::HandType::Hand_Single:
+        findCardArray[0].add(cardsArray.at(0));
+    }
+
+    // 将最终结果返回给函数调用者
+    return findCardArray;
 }

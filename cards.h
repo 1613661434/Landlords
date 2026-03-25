@@ -41,6 +41,10 @@ public:
     // 删除扑克牌
     inline void remove(const Card& card) { m_cards.remove(card); }
     inline void remove(const Cards& cards) { m_cards.subtract(cards.m_cards); }
+    inline void remove(const QVector<Cards>& v_cards)
+    {
+        for (const auto& cards : v_cards) m_cards.subtract(cards.m_cards);
+    }
 
     inline int cardCount() const { return m_cards.size(); }
     inline bool isEmpty() const { return m_cards.isEmpty(); }
