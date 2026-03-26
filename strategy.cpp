@@ -183,3 +183,72 @@ QVector<Cards> Strategy::getPlane2SingleOr2Pair(Card::CardPoint begin, PlayHand:
     // 将最终结果返回给函数调用者
     return findCardArray;
 }
+
+QVector<Cards> Strategy::getSepPairOrSeqSingle(Card::CardPoint begin, int extra, bool beat) const
+{
+    QVector<Cards> findCardsArray;
+    if (beat)
+    {
+        // 最少3个, 最大A
+        for (Card::CardPoint point = begin; point <= Card::CardPoint::Card_Q; ++point)
+        {
+            bool found = true;
+            Cards seqCards;
+            for (int i = 0; i < extra; ++i)
+            {
+                // 基于点数和数量进行牌的搜索
+                Cards cards = findSamePointCards(point + i, 2);
+                if (cards.isEmpty() || (point + extra >= Card::CardPoint::Card_2))
+                {
+                    found = false;
+                    seqCards.clear();
+                    break;
+                }
+                seqCards << cards;
+            }
+            if (found)
+            {
+                findCardsArray << seqCards;
+                return findCardsArray;
+            }
+        }
+    }
+    else
+    {
+        for (Card::CardPoint point = begin; point <= Card::CardPoint::Card_Q; ++point)
+        {
+            // 找到三个点数连续的对
+            Cards cards0 = findSamePointCards(point, 2);
+            Cards cards1 = findSamePointCards(point + 1, 2);
+            Cards cards2 = findSamePointCards(point + 2, 2);
+            if (cards0.isEmpty() || cards1.isEmpty() || cards2.isEmpty()) continue;
+
+            // 将找到的这个基础连对存储起来
+            Cards baseSeq;
+            baseSeq << cards0 << cards1 << cards2;
+            // 连对存储到容器中
+            findCardsArray << baseSeq;
+
+            int followed = 3;
+            Cards alreadyFollowedCards; // 存储后续找到的满足条件的连对
+
+            while (true)
+            {
+                // 新的起始点数
+                Card::CardPoint followedPoint = Card::CardPoint(point + followed);
+                // 判断是否超出了上限
+                if (followedPoint >= Card::CardPoint::Card_2) break;
+
+                Cards follwedCards = findSamePointCards(followedPoint, 2);
+                if (follwedCards.isEmpty()) break;
+
+                alreadyFollowedCards << follwedCards;
+                Cards newSeq = baseSeq;
+                newSeq << alreadyFollowedCards;
+                findCardsArray << newSeq;
+                ++followed;
+            }
+        }
+    }
+    return findCardsArray;
+}

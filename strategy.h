@@ -43,6 +43,9 @@ private:
 
     // 找飞机带两单或两对，type只能Hand_Single或Hand_Pair
     QVector<Cards> getPlane2SingleOr2Pair(Card::CardPoint begin, PlayHand::HandType type) const;
+
+    // 找连对或顺子
+    QVector<Cards> getSepPairOrSeqSingle(Card::CardPoint begin, int extra, bool beat) const;
 };
 
 #endif // STRATEGY_H
