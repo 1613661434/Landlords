@@ -37,6 +37,12 @@ private:
 
     // 找三带一或者三带二，type只能Hand_Single或Hand_Pair
     QVector<Cards> getTripleSingleOrPair(Card::CardPoint begin, PlayHand::HandType type) const;
+
+    // 找飞机
+    QVector<Cards> getPlane(Card::CardPoint begin) const;
+
+    // 找飞机带两单或两对，type只能Hand_Single或Hand_Pair
+    QVector<Cards> getPlane2SingleOr2Pair(Card::CardPoint begin, PlayHand::HandType type) const;
 };
 
 #endif // STRATEGY_H
