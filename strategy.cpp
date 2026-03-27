@@ -1,4 +1,5 @@
 #include "strategy.h"
+#include <functional>
 
 Strategy::Strategy(Player* player, const Cards& cards) : m_player(player), m_cards(cards) {}
 
@@ -64,14 +65,14 @@ Cards Strategy::getRangeCards(Card::CardPoint begin, Card::CardPoint end) const
     return rangeCards;
 }
 
-QVector<Cards> Strategy::findCardType(PlayHand hand, bool beat) const
+QVector<Cards> Strategy::findCardType(PlayHand hand, bool isBeat) const
 {
     PlayHand::HandType type = hand.getHandType();
     Card::CardPoint point = hand.getCardPoint();
     int extra = hand.getExtra();
 
     // 确定起始点数
-    Card::CardPoint beginPoint = beat ? Card::CardPoint(point + 1) : Card::CardPoint::Card_3;
+    Card::CardPoint beginPoint = isBeat ? Card::CardPoint(point + 1) : Card::CardPoint::Card_3;
 
     switch (type)
     {
@@ -82,18 +83,21 @@ QVector<Cards> Strategy::findCardType(PlayHand hand, bool beat) const
     case PlayHand::Hand_Triple:
         return getCardsByCountFromPoint(beginPoint, 3);
     case PlayHand::Hand_Triple_Single:
-        return getTripleSingleOrPair(beginPoint, PlayHand::HandType::Hand_Single);
+        return getTripleSingleOrPair(beginPoint, false);
     case PlayHand::Hand_Triple_Pair:
-        return getTripleSingleOrPair(beginPoint, PlayHand::HandType::Hand_Pair);
+        return getTripleSingleOrPair(beginPoint, true);
     case PlayHand::Hand_Plane:
         return getPlane(beginPoint);
     case PlayHand::Hand_Plane_Two_Single:
-        return getPlane2SingleOr2Pair(beginPoint, PlayHand::HandType::Hand_Single);
+        return getPlane2SingleOr2Pair(beginPoint, false);
     case PlayHand::Hand_Plane_Two_Pair:
-        return getPlane2SingleOr2Pair(beginPoint, PlayHand::HandType::Hand_Pair);
-    case PlayHand::Hand_Seq_Pair:
+        return getPlane2SingleOr2Pair(beginPoint, true);
     case PlayHand::Hand_Seq_Single:
+        return getSeqSingleOrSepPair(beginPoint, extra, isBeat, false);
+    case PlayHand::Hand_Seq_Pair:
+        return getSeqSingleOrSepPair(beginPoint, extra, isBeat, true);
     case PlayHand::Hand_Bomb:
+        return getBomb(beginPoint);
     default:
         return QVector<Cards>();
     }
@@ -114,9 +118,9 @@ QVector<Cards> Strategy::getCardsByCountFromPoint(Card::CardPoint point, int num
     return findCardsArray;
 }
 
-QVector<Cards> Strategy::getTripleSingleOrPair(Card::CardPoint begin, PlayHand::HandType type) const
+QVector<Cards> Strategy::getTripleSingleOrPair(Card::CardPoint begin, bool isPair) const
 {
-    if (type != PlayHand::HandType::Hand_Single && type != PlayHand::HandType::Hand_Pair) return QVector<Cards>();
+    PlayHand::HandType type = isPair ? PlayHand::HandType::Hand_Pair : PlayHand::HandType::Hand_Single;
 
     // 找到点数相同的三张牌
     QVector<Cards> findCardArray = getCardsByCountFromPoint(begin, 3);
@@ -155,9 +159,9 @@ QVector<Cards> Strategy::getPlane(Card::CardPoint begin) const
     return findCardArray;
 }
 
-QVector<Cards> Strategy::getPlane2SingleOr2Pair(Card::CardPoint begin, PlayHand::HandType type) const
+QVector<Cards> Strategy::getPlane2SingleOr2Pair(Card::CardPoint begin, bool isPair) const
 {
-    if (type != PlayHand::HandType::Hand_Single && type != PlayHand::HandType::Hand_Pair) return QVector<Cards>();
+    PlayHand::HandType type = isPair ? PlayHand::HandType::Hand_Pair : PlayHand::HandType::Hand_Single;
 
     // 找到点数相同的三张牌
     QVector<Cards> findCardArray = getPlane(begin);
@@ -184,21 +188,51 @@ QVector<Cards> Strategy::getPlane2SingleOr2Pair(Card::CardPoint begin, PlayHand:
     return findCardArray;
 }
 
-QVector<Cards> Strategy::getSepPairOrSeqSingle(Card::CardPoint begin, int extra, bool beat) const
+QVector<Cards> Strategy::getSeqSingleOrSepPair(Card::CardPoint begin, int extra, bool isBeat, bool isPair) const
 {
     QVector<Cards> findCardsArray;
-    if (beat)
+    Card::CardPoint end;
+    int number;
+    int baseFollowed;
+    std::function<Cards(Card::CardPoint)> getBaseSeqSingleOrPair;
+
+    if (isPair)
     {
-        // 最少3个, 最大A
-        for (Card::CardPoint point = begin; point <= Card::CardPoint::Card_Q; ++point)
+        end = Card::CardPoint::Card_K;
+        number = 2;
+        baseFollowed = 3;
+    }
+    else
+    {
+        end = Card::CardPoint::Card_J;
+        number = 1;
+        baseFollowed = 5;
+    }
+
+    getBaseSeqSingleOrPair = [this, number, baseFollowed](Card::CardPoint point)
+    {
+        Cards baseSeq;
+        for (int i = 0; i < baseFollowed; ++i)
+        {
+            Cards cards = findSamePointCards(point + i, number);
+            if (cards.isEmpty()) return Cards();
+            baseSeq << cards;
+        }
+        return baseSeq;
+    };
+
+    if (isBeat)
+    {
+        // 最少3||5个, 最大A
+        for (; begin < end; ++begin)
         {
             bool found = true;
             Cards seqCards;
             for (int i = 0; i < extra; ++i)
             {
                 // 基于点数和数量进行牌的搜索
-                Cards cards = findSamePointCards(point + i, 2);
-                if (cards.isEmpty() || (point + extra >= Card::CardPoint::Card_2))
+                Cards cards = findSamePointCards(begin + i, number);
+                if (cards.isEmpty() || (begin + extra >= Card::CardPoint::Card_2))
                 {
                     found = false;
                     seqCards.clear();
@@ -215,31 +249,26 @@ QVector<Cards> Strategy::getSepPairOrSeqSingle(Card::CardPoint begin, int extra,
     }
     else
     {
-        for (Card::CardPoint point = begin; point <= Card::CardPoint::Card_Q; ++point)
+        for (; begin < end; ++begin)
         {
-            // 找到三个点数连续的对
-            Cards cards0 = findSamePointCards(point, 2);
-            Cards cards1 = findSamePointCards(point + 1, 2);
-            Cards cards2 = findSamePointCards(point + 2, 2);
-            if (cards0.isEmpty() || cards1.isEmpty() || cards2.isEmpty()) continue;
-
             // 将找到的这个基础连对存储起来
-            Cards baseSeq;
-            baseSeq << cards0 << cards1 << cards2;
+            Cards baseSeq = getBaseSeqSingleOrPair(begin);
+            if (baseSeq.isEmpty()) continue;
+
             // 连对存储到容器中
             findCardsArray << baseSeq;
 
-            int followed = 3;
+            int followed = baseFollowed;
             Cards alreadyFollowedCards; // 存储后续找到的满足条件的连对
 
             while (true)
             {
                 // 新的起始点数
-                Card::CardPoint followedPoint = Card::CardPoint(point + followed);
+                Card::CardPoint followedPoint = Card::CardPoint(begin + followed);
                 // 判断是否超出了上限
                 if (followedPoint >= Card::CardPoint::Card_2) break;
 
-                Cards follwedCards = findSamePointCards(followedPoint, 2);
+                Cards follwedCards = findSamePointCards(followedPoint, number);
                 if (follwedCards.isEmpty()) break;
 
                 alreadyFollowedCards << follwedCards;
@@ -251,4 +280,15 @@ QVector<Cards> Strategy::getSepPairOrSeqSingle(Card::CardPoint begin, int extra,
         }
     }
     return findCardsArray;
+}
+
+QVector<Cards> Strategy::getBomb(Card::CardPoint begin) const
+{
+    QVector<Cards> findcardsArray;
+    for (; begin < Card::CardPoint::Card_End; ++begin)
+    {
+        Cards cards = findSamePointCards(begin, 4);
+        if (!cards.isEmpty()) findcardsArray << cards;
+    }
+    return findcardsArray;
 }

@@ -29,23 +29,21 @@ public:
     // 7. 根据点数范围找牌
     Cards getRangeCards(Card::CardPoint begin, Card::CardPoint end) const;
     // 8. 按牌型找牌，并且指定要找的牌是否要大过指定的牌型
-    QVector<Cards> findCardType(PlayHand hand, bool beat) const;
+    QVector<Cards> findCardType(PlayHand hand, bool isBeat) const;
 
 private:
     // 从指定起始点数开始，向后查找所有数量恰好为number的同点数牌组
     QVector<Cards> getCardsByCountFromPoint(Card::CardPoint point, int number) const;
-
-    // 找三带一或者三带二，type只能Hand_Single或Hand_Pair
-    QVector<Cards> getTripleSingleOrPair(Card::CardPoint begin, PlayHand::HandType type) const;
-
+    // 找三带一或者三带二
+    QVector<Cards> getTripleSingleOrPair(Card::CardPoint begin, bool isPair) const;
     // 找飞机
     QVector<Cards> getPlane(Card::CardPoint begin) const;
-
-    // 找飞机带两单或两对，type只能Hand_Single或Hand_Pair
-    QVector<Cards> getPlane2SingleOr2Pair(Card::CardPoint begin, PlayHand::HandType type) const;
-
+    // 找飞机带两单或两对
+    QVector<Cards> getPlane2SingleOr2Pair(Card::CardPoint begin, bool isPair) const;
     // 找连对或顺子
-    QVector<Cards> getSepPairOrSeqSingle(Card::CardPoint begin, int extra, bool beat) const;
+    QVector<Cards> getSeqSingleOrSepPair(Card::CardPoint begin, int extra, bool isBeat, bool isPair) const;
+    // 找炸弹
+    QVector<Cards> getBomb(Card::CardPoint begin) const;
 };
 
 #endif // STRATEGY_H

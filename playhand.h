@@ -23,8 +23,8 @@ public:
         Hand_Plane_Two_Single, // 飞机带单，555_666_3_4
         Hand_Plane_Two_Pair,   // 飞机带双，555_666_33_44
 
-        Hand_Seq_Pair,   // 连对，33_44_55(_66...)
         Hand_Seq_Single, // 顺子，34567(8...)
+        Hand_Seq_Pair,   // 连对，33_44_55(_66...)
 
         Hand_Bomb,            // 炸弹
         Hand_Bomb_Single,     // 炸弹带一个
