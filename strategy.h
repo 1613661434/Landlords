@@ -14,13 +14,13 @@ public:
     Strategy(Player* player, const Cards& cards);
 
     // 1. 制定出牌策略
-    Cards makeStrategy();
+    Cards makeStrategy() const;
     // 2. 第一个出牌 firstPlay
-    Cards firstPlay();
+    Cards firstPlay() const;
     // 3. 得到比指定牌型大的牌
-    Cards getGreaterCards(PlayHand type);
+    Cards getGreaterCards(PlayHand type) const;
     // 4. 能大过指定的牌时，判断是出牌还是放行, 返回true->出牌, 返回false->放行
-    bool whetherToBeat(Cards& cs);
+    bool whetherToBeat(const Cards& cards) const;
 
     // 5. 找出指定数量(count)的相同点数的牌(point), 找出count张点数为point的牌
     Cards findSamePointCards(Card::CardPoint point, int count) const;

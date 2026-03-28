@@ -3,6 +3,46 @@
 
 Strategy::Strategy(Player* player, const Cards& cards) : m_player(player), m_cards(cards) {}
 
+Cards Strategy::makeStrategy() const
+{
+    // 得到出牌玩家对象以及打出的牌
+    Player* pendPlayer = m_player->getPendPlayer();
+    Cards pendCards = m_player->getPendCards();
+
+    // 判断上次出牌的玩家是不是我自己
+    if (pendPlayer == m_player || pendPlayer == nullptr)
+    {
+        // 直接出牌
+        // 如果是我自己, 出牌没有限制
+        return firstPlay();
+    }
+
+    // 如果不是我自己需要找比出牌玩家点数大的牌
+    Cards beatCards = getGreaterCards(PlayHand(pendCards));
+    // 找到了点数大的牌需要考虑是否出牌
+    if (whetherToBeat(beatCards))
+    {
+        return beatCards;
+    }
+
+    return Cards();
+}
+
+Cards Strategy::firstPlay() const
+{
+    return Cards();
+}
+
+Cards Strategy::getGreaterCards(PlayHand type) const
+{
+    return Cards();
+}
+
+bool Strategy::whetherToBeat(const Cards& cards) const
+{
+    return false;
+}
+
 Cards Strategy::findSamePointCards(Card::CardPoint point, int count) const
 {
     Cards retCards = Cards();
