@@ -40,7 +40,35 @@ Cards Strategy::getGreaterCards(PlayHand type) const
 
 bool Strategy::whetherToBeat(const Cards& cards) const
 {
-    return false;
+    // 没有找到能够击败对方的牌
+    if (cards.isEmpty()) return false;
+
+    // 得到出牌玩家的对象
+    Player* pendPlayer = m_player->getPendPlayer();
+    if (m_player->getRole() == pendPlayer->getRole())
+    {
+        // 手里的牌所剩无几并且是一个完整的牌型
+        Cards left = m_cards;
+        left.remove(cards);
+        if (PlayHand(left).getHandType() != PlayHand::HandType::Hand_Unknown) return true;
+
+        // 如果cards对象中的牌的最小点数是2,大小王 --> 不出牌
+        Card::CardPoint basePoint = PlayHand(cards).getCardPoint();
+        if (basePoint == Card::CardPoint::Card_2 || basePoint == Card::CardPoint::Card_SJ || basePoint == Card::CardPoint::Card_BJ) return false;
+    }
+    else
+    {
+        PlayHand myHand(cards);
+        // 如果是三个2带一,或者带一对, 不出牌(保存实力)
+        if ((myHand.getHandType() == PlayHand::HandType::Hand_Triple_Single || myHand.getHandType() == PlayHand::HandType::Hand_Triple_Pair) &&
+            myHand.getCardPoint() == Card::CardPoint::Card_2) return false;
+
+        // 如果cards是对2, 并且出牌玩家手中的牌数量大于等于10 && 自己的牌的数量大于等于5, 暂时放弃出牌
+        if (myHand.getHandType() == PlayHand::HandType::Hand_Pair && myHand.getCardPoint() == Card::CardPoint::Card_2 &&
+            pendPlayer->getCards().cardCount() >= 10 && m_player->getCards().cardCount() >= 5) return false;
+    }
+
+    return true;
 }
 
 Cards Strategy::findSamePointCards(Card::CardPoint point, int count) const

@@ -2,7 +2,7 @@
 
 PlayHand::PlayHand() {}
 
-PlayHand::PlayHand(Cards& cards)
+PlayHand::PlayHand(const Cards& cards)
 {
     // 1. 对扑克牌进行分类：1张，2张，3张，4张有多少种
     classify(cards);
