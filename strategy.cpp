@@ -1,5 +1,6 @@
 #include "strategy.h"
 #include <functional>
+#include <QMap>
 
 Strategy::Strategy(Player* player, const Cards& cards) : m_player(player), m_cards(cards) {}
 
@@ -51,13 +52,12 @@ Cards Strategy::getGreaterCards(PlayHand hand) const
     Player* nextPlayer = m_player->getNextPlayer();
     // 将玩家手中的顺子剔除出去
     Cards remain = m_cards;
-    remain.remove(Strategy(m_player, remain).pickOptimalSeqSingles());
+    remain.remove(Strategy(m_player, m_cards).pickOptimalSeqSingles());
 
     auto findBeatCard = [this, hand, nextPlayer](const Cards& cards) -> Cards
     {
         QVector<Cards> beatCardsArray = Strategy(m_player, cards).findCardType(hand, true);
         if (beatCardsArray.isEmpty()) return Cards();
-
         return (m_player->getRole() != nextPlayer->getRole() && nextPlayer->getCards().cardCount() <= 2) ? beatCardsArray.back() : beatCardsArray.front();
     };
 
@@ -65,7 +65,7 @@ Cards Strategy::getGreaterCards(PlayHand hand) const
     if (!(cards = findBeatCard(remain)).isEmpty()) return cards;
     if (!(cards = findBeatCard(m_cards)).isEmpty()) return cards;
 
-    return Cards();
+    return cards;
 }
 
 bool Strategy::whetherToBeat(const Cards& cards) const
@@ -235,7 +235,45 @@ void Strategy::pickSeqSingles(QVector<QVector<Cards>>& allSeqRecord, const Cards
 
 QVector<Cards> Strategy::pickOptimalSeqSingles() const
 {
-    return QVector<Cards>();
+    QVector<QVector<Cards>> seqRecord;
+    Cards save = m_cards;
+    save.remove(findCardsByCount(4));
+    save.remove(findCardsByCount(3));
+    pickSeqSingles(seqRecord, save);
+    if (seqRecord.isEmpty()) return QVector<Cards>();
+
+    // 遍历容器
+    QMap<int, int> seqMarks;
+    for (int i = 0, size = (int)seqRecord.size(); i < size; ++i)
+    {
+        Cards backupCards = m_cards;
+        QVector<Cards> seqArray = seqRecord[i];
+        backupCards.remove(seqArray);
+
+        // 判断剩下的单牌是数量，数量越少，顺子的组合就越合理
+        QVector<Cards> singleArray = Strategy(m_player, backupCards).findCardsByCount(1);
+
+        CardList cardList;
+        for (int j = 0, size = (int)singleArray.size(); j < size; ++j) cardList << singleArray[j].toCardList();
+
+        // 找点数相对较大一点顺子
+        int mark = 0;
+        for (int j = 0, size = (int)cardList.size(); j < size; ++j) mark += (int)cardList[j].getCardPoint() + 15;
+        seqMarks.insert(i, mark);
+    }
+
+    // 遍历map
+    int value = 0, comMark = INT_MAX;
+    for (auto it = seqMarks.constBegin(); it != seqMarks.constEnd(); ++it)
+    {
+        if (it.value() < comMark)
+        {
+            comMark = it.value();
+            value = it.key();
+        }
+    }
+
+    return seqRecord[value];
 }
 
 QVector<Cards> Strategy::getCardsByCountFromPoint(Card::CardPoint point, int number) const
