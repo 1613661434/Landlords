@@ -20,7 +20,7 @@ private:
     // 1.1. 第一个出牌
     Cards firstPlay() const;
     // 1.2. 得到比指定牌型大的牌
-    Cards getGreaterCards(PlayHand type) const;
+    Cards getGreaterCards(PlayHand hand) const;
     // 1.3. 能大过指定的牌时，判断是出牌还是放行, 返回true->出牌, 返回false->放行
     bool whetherToBeat(const Cards& cards) const;
 
@@ -33,6 +33,10 @@ public:
     Cards getRangeCards(Card::CardPoint begin, Card::CardPoint end) const;
     // 5. 按牌型找牌，并且指定要找的牌是否要大过指定的牌型
     QVector<Cards> findCardType(PlayHand hand, bool isBeat) const;
+    // 6. 从指定的Cards对象中挑选出满足条件的顺子
+    void pickSeqSingles(QVector<QVector<Cards>>& allSeqRecord, const QVector<Cards>& seqSingle, const Cards& cards) const;
+    // 7. 最优的顺子的集合的筛选函数
+    QVector<Cards> pickOptimalSeqSingles() const;
 
 private:
     // 从指定起始点数开始，向后查找所有数量恰好为number的同点数牌组

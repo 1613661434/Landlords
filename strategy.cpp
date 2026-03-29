@@ -9,21 +9,14 @@ Cards Strategy::makeStrategy() const
     Player* pendPlayer = m_player->getPendPlayer();
     Cards pendCards = m_player->getPendCards();
 
-    // 判断上次出牌的玩家是不是我自己
-    if (pendPlayer == m_player || pendPlayer == nullptr)
-    {
-        // 直接出牌
-        // 如果是我自己, 出牌没有限制
-        return firstPlay();
-    }
+    // 判断上次出牌的玩家是不是我自己(如果是我自己, 出牌没有限制)
+    if (pendPlayer == m_player || pendPlayer == nullptr) return firstPlay();
 
     // 如果不是我自己需要找比出牌玩家点数大的牌
     Cards beatCards = getGreaterCards(PlayHand(pendCards));
+
     // 找到了点数大的牌需要考虑是否出牌
-    if (whetherToBeat(beatCards))
-    {
-        return beatCards;
-    }
+    if (whetherToBeat(beatCards)) return beatCards;
 
     return Cards();
 }
@@ -33,8 +26,45 @@ Cards Strategy::firstPlay() const
     return Cards();
 }
 
-Cards Strategy::getGreaterCards(PlayHand type) const
+Cards Strategy::getGreaterCards(PlayHand hand) const
 {
+    // 1. 出牌玩家和当前玩家不是一伙的
+    Player* pendPlayer = m_player->getPendPlayer();
+    if (pendPlayer != nullptr && pendPlayer->getRole() != m_player->getRole() && pendPlayer->getCards().cardCount() <= 3)
+    {
+        QVector<Cards> bombs = findCardsByCount(4);
+        for (int i = 0, size = (int)bombs.size(); i < size; ++i)
+        {
+            if (PlayHand(bombs[i]).canBeat(hand)) return bombs[i];
+        }
+        // 搜索当前玩家手中有没有王炸
+        Cards sj = findSamePointCards(Card::CardPoint::Card_SJ, 1);
+        Cards bj = findSamePointCards(Card::CardPoint::Card_BJ, 1);
+        if (!sj.isEmpty() && !bj.isEmpty())
+        {
+            sj << bj;
+            return sj;
+        }
+    }
+
+    // 2. 当前玩家和下一个玩家不是一伙的
+    Player* nextPlayer = m_player->getNextPlayer();
+    // 将玩家手中的顺子剔除出去
+    Cards remain = m_cards;
+    remain.remove(Strategy(m_player, remain).pickOptimalSeqSingles());
+
+    auto findBeatCard = [this, hand, nextPlayer](const Cards& cards) -> Cards
+    {
+        QVector<Cards> beatCardsArray = Strategy(m_player, cards).findCardType(hand, true);
+        if (beatCardsArray.isEmpty()) return Cards();
+
+        return (m_player->getRole() != nextPlayer->getRole() && nextPlayer->getCards().cardCount() <= 2) ? beatCardsArray.back() : beatCardsArray.front();
+    };
+
+    Cards cards;
+    if (!(cards = findBeatCard(remain)).isEmpty()) return cards;
+    if (!(cards = findBeatCard(m_cards)).isEmpty()) return cards;
+
     return Cards();
 }
 
@@ -171,6 +201,15 @@ QVector<Cards> Strategy::findCardType(PlayHand hand, bool isBeat) const
     }
 }
 
+void Strategy::pickSeqSingles(QVector<QVector<Cards>>& allSeqRecord, const QVector<Cards>& seqSingle, const Cards& cards) const
+{
+}
+
+QVector<Cards> Strategy::pickOptimalSeqSingles() const
+{
+    return QVector<Cards>();
+}
+
 QVector<Cards> Strategy::getCardsByCountFromPoint(Card::CardPoint point, int number) const
 {
     QVector<Cards> findCardsArray;
@@ -179,7 +218,7 @@ QVector<Cards> Strategy::getCardsByCountFromPoint(Card::CardPoint point, int num
 
     for (; point < Card::CardPoint::Card_End; ++point)
     {
-        // 目的是尽量不拆分别的牌型
+        // 只有刚刚好point的牌数等于number才加入，目的是尽量不拆分别的牌型（如炸弹）
         if (m_cards.pointCount(point) == number) findCardsArray << findSamePointCards(point, number);
     }
 
@@ -277,7 +316,7 @@ QVector<Cards> Strategy::getSeqSingleOrSepPair(Card::CardPoint begin, int extra,
         baseFollowed = 5;
     }
 
-    getBaseSeqSingleOrPair = [this, number, baseFollowed](Card::CardPoint point)
+    getBaseSeqSingleOrPair = [this, number, baseFollowed](Card::CardPoint point) -> Cards
     {
         Cards baseSeq;
         for (int i = 0; i < baseFollowed; ++i)
@@ -292,9 +331,9 @@ QVector<Cards> Strategy::getSeqSingleOrSepPair(Card::CardPoint begin, int extra,
     if (isBeat)
     {
         // 最少3||5个, 最大A
-        for (; begin < end; ++begin)
+        for (bool found; begin < end; ++begin)
         {
-            bool found = true;
+            found = true;
             Cards seqCards;
             for (int i = 0; i < extra; ++i)
             {
