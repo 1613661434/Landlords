@@ -11,14 +11,14 @@ class GameControl : public QObject
     Q_OBJECT
 public:
     // 游戏状态
-    enum GameStatus : char
+    enum class GameStatus : char
     {
         DispatchCard, // 发牌
         CallingLord,  // 叫地主
         PlayingHand   // 出牌
     };
     // 玩家状态
-    enum PlayerStatus : char
+    enum class PlayerStatus : char
     {
         ThinkingForCallLord, // 考虑叫地主
         ThinkingForPlayHand, // 考虑出牌

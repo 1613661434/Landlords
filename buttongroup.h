@@ -13,7 +13,7 @@ class ButtonGroup : public QWidget
     Q_OBJECT
 
 public:
-    enum Panel : char
+    enum class Panel : char
     {
         Start,
         PlayCard,

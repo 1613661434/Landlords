@@ -19,7 +19,7 @@ class GamePanel : public QMainWindow
 {
     Q_OBJECT
 private:
-    enum CardAlign : char
+    enum class CardAlign : char
     {
         Horizontal,
         Vertical

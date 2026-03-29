@@ -324,7 +324,7 @@ void GamePanel::updatePlayerCards(Player* player)
         panel->setFrontSide(m_contextMap[player].isFrontSide);
 
         // 水平 or 垂直显示
-        if (m_contextMap[player].align == Horizontal)
+        if (m_contextMap[player].align == GamePanel::CardAlign::Horizontal)
         {
             int leftX = cardsRect.left() + (cardsRect.width() - (size - 1) * cardSpace - panel->width()) / 2;
             int topY = cardsRect.top() + (cardsRect.height() - m_cardSize.height()) / 2;
