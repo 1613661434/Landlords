@@ -7,7 +7,7 @@ class PlayHand
 {
 public:
     // 出牌组合或者方式
-    enum HandType : char
+    enum class HandType : char
     {
         Hand_Unknown, // 未知
         Hand_Pass,    // 过

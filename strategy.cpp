@@ -174,35 +174,63 @@ QVector<Cards> Strategy::findCardType(PlayHand hand, bool isBeat) const
 
     switch (type)
     {
-    case PlayHand::Hand_Single:
+    case PlayHand::HandType::Hand_Single:
         return getCardsByCountFromPoint(beginPoint, 1); // BUG：按道理应该相同点数但是花色大的也加入，先这样子
-    case PlayHand::Hand_Pair:
+    case PlayHand::HandType::Hand_Pair:
         return getCardsByCountFromPoint(beginPoint, 2);
-    case PlayHand::Hand_Triple:
+    case PlayHand::HandType::Hand_Triple:
         return getCardsByCountFromPoint(beginPoint, 3);
-    case PlayHand::Hand_Triple_Single:
+    case PlayHand::HandType::Hand_Triple_Single:
         return getTripleSingleOrPair(beginPoint, false);
-    case PlayHand::Hand_Triple_Pair:
+    case PlayHand::HandType::Hand_Triple_Pair:
         return getTripleSingleOrPair(beginPoint, true);
-    case PlayHand::Hand_Plane:
+    case PlayHand::HandType::Hand_Plane:
         return getPlane(beginPoint);
-    case PlayHand::Hand_Plane_Two_Single:
+    case PlayHand::HandType::Hand_Plane_Two_Single:
         return getPlane2SingleOr2Pair(beginPoint, false);
-    case PlayHand::Hand_Plane_Two_Pair:
+    case PlayHand::HandType::Hand_Plane_Two_Pair:
         return getPlane2SingleOr2Pair(beginPoint, true);
-    case PlayHand::Hand_Seq_Single:
+    case PlayHand::HandType::Hand_Seq_Single:
         return getSeqSingleOrSepPair(beginPoint, extra, isBeat, false);
-    case PlayHand::Hand_Seq_Pair:
+    case PlayHand::HandType::Hand_Seq_Pair:
         return getSeqSingleOrSepPair(beginPoint, extra, isBeat, true);
-    case PlayHand::Hand_Bomb:
+    case PlayHand::HandType::Hand_Bomb:
         return getBomb(beginPoint);
     default:
         return QVector<Cards>();
     }
 }
 
-void Strategy::pickSeqSingles(QVector<QVector<Cards>>& allSeqRecord, const QVector<Cards>& seqSingle, const Cards& cards) const
+void Strategy::pickSeqSingles(QVector<QVector<Cards>>& allSeqRecord, const Cards& cards, const QVector<Cards>& seqSingle) const
 {
+    // 1. 得到所有顺子的组合
+    QVector<Cards> allSeq = Strategy(m_player, cards).findCardType(PlayHand(PlayHand::HandType::Hand_Seq_Single, Card::CardPoint::Card_Begin), false);
+    if (allSeq.isEmpty())
+    {
+        // 结束递归，将满足条件的顺子传递给调用者
+        allSeqRecord << seqSingle;
+        return;
+    }
+
+    // 2. 对顺子进行筛选
+    Cards saveCards = cards;
+    // 遍历得到的所有的顺子
+    for (int i = 0, size = (int)allSeq.size(); i < size; ++i)
+    {
+        // 将顺子取出
+        Cards aScheme = allSeq.at(i);
+        // 将顺子从用户手中删除
+        Cards temp = saveCards;
+        temp.remove(aScheme);
+
+        QVector<Cards> seqArray = seqSingle;
+        seqArray << aScheme;
+
+        // 检测还有没有其他的顺子
+        // seqArray 存储一轮for循环中多轮递归得到的所有的可用的顺子
+        // allSeqRecord 存储多轮for循环中多轮递归得到的所有的可用的顺子
+        pickSeqSingles(allSeqRecord, temp, seqArray);
+    }
 }
 
 QVector<Cards> Strategy::pickOptimalSeqSingles() const

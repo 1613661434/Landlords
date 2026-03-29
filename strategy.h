@@ -34,7 +34,7 @@ public:
     // 5. 按牌型找牌，并且指定要找的牌是否要大过指定的牌型
     QVector<Cards> findCardType(PlayHand hand, bool isBeat) const;
     // 6. 从指定的Cards对象中挑选出满足条件的顺子
-    void pickSeqSingles(QVector<QVector<Cards>>& allSeqRecord, const QVector<Cards>& seqSingle, const Cards& cards) const;
+    void pickSeqSingles(QVector<QVector<Cards>>& allSeqRecord, const Cards& cards, const QVector<Cards>& seqSingle = QVector<Cards>()) const;
     // 7. 最优的顺子的集合的筛选函数
     QVector<Cards> pickOptimalSeqSingles() const;
 
