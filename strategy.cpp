@@ -150,7 +150,23 @@ Cards Strategy::firstPlay() const
         return seqTripleArray[0];
     }
 
-    return Cards();
+    // 单牌或者对儿牌
+    Player* nextPlayer = m_player->getNextPlayer();
+    auto retSingleOrPair = [&](Card::CardPoint start, Card::CardPoint end, int step) -> Cards
+    {
+        for (Card::CardPoint point = start; (step > 0) ? (point < end) : (point > end); point += step)
+        {
+            const int pointCount = backup.pointCount(point);
+            if (pointCount == 1)
+                return Strategy(m_player, backup).findSamePointCards(point, 1);
+            else if (pointCount == 2)
+                return Strategy(m_player, backup).findSamePointCards(point, 2);
+        }
+        return Cards();
+    };
+
+    if (nextPlayer->getCards().cardCount() == 1 && m_player->getRole() != nextPlayer->getRole()) return retSingleOrPair(Card::CardPoint::Card_End - 1, Card::CardPoint::Card_Begin, -1);
+    return retSingleOrPair(Card::CardPoint::Card_Begin + 1, Card::CardPoint::Card_End, 1);
 }
 
 Cards Strategy::getGreaterCards(PlayHand hand) const
