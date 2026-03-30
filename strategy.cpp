@@ -42,6 +42,47 @@ Cards Strategy::firstPlay() const
         if (lastNum < baseNum) return optimalSeq[0];
     }
 
+    bool hasPlane = false, hasTriple = false, hasPair = false;
+    Cards backup = m_cards;
+
+    // 有没有炸弹
+    QVector<Cards> bombArray = findCardType(PlayHand(PlayHand::HandType::Hand_Bomb, Card::CardPoint::Card_Begin), false);
+    if (!bombArray.isEmpty()) backup.remove(bombArray);
+
+    // 有没有飞机
+    QVector<Cards> planeArray = Strategy(m_player, backup).findCardType(PlayHand(PlayHand::HandType::Hand_Plane, Card::CardPoint::Card_Begin), false);
+    if (!planeArray.isEmpty())
+    {
+        hasPlane = true;
+        backup.remove(planeArray);
+    }
+
+    // 有没有三张点数相同的牌
+    QVector<Cards> seqTripleArray = Strategy(m_player, backup).findCardType(PlayHand(PlayHand::HandType::Hand_Triple, Card::CardPoint::Card_Begin), false);
+    if (!seqTripleArray.isEmpty())
+    {
+        hasTriple = true;
+        backup.remove(seqTripleArray);
+    }
+
+    // 有没有连对
+    QVector<Cards> seqPairArray = Strategy(m_player, backup).findCardType(PlayHand(PlayHand::HandType::Hand_Seq_Pair, Card::CardPoint::Card_Begin), false);
+    if (!seqPairArray.isEmpty())
+    {
+        hasPair = true;
+        backup.remove(seqPairArray);
+    }
+
+    if (hasPair)
+    {
+        int maxIdx = 0, maxPair = seqPairArray[0].cardCount();
+        for (int i = 1, size = (int)seqPairArray.size(); i < size; ++i)
+        {
+            if (seqPairArray[i].cardCount() > maxPair) maxIdx = i;
+        }
+        return seqPairArray[maxIdx];
+    }
+
     return Cards();
 }
 
