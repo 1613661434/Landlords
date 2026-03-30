@@ -83,6 +83,73 @@ Cards Strategy::firstPlay() const
         return seqPairArray[maxIdx];
     }
 
+    if (hasPlane)
+    {
+        // 1. 飞机带两个对儿
+        QVector<Cards> pairArray;
+        for (Card::CardPoint point = Card::CardPoint::Card_3; point < Card::CardPoint::Card_J; ++point)
+        {
+            Cards pair = Strategy(m_player, backup).findSamePointCards(point, 2);
+            if (pair.isEmpty()) continue;
+
+            pairArray.push_back(pair);
+            if (pairArray.size() == 2)
+            {
+                Cards tmp = planeArray[0];
+                tmp.add(pairArray);
+                return tmp;
+            }
+        }
+
+        // 2. 飞机带两个单牌
+        QVector<Cards> singleArray;
+        for (Card::CardPoint point = Card::CardPoint::Card_3; point < Card::CardPoint::Card_J; ++point)
+        {
+            if (backup.pointCount(point) != 1) continue;
+
+            Cards single = Strategy(m_player, backup).findSamePointCards(point, 1);
+            if (single.isEmpty()) continue;
+
+            singleArray.push_back(single);
+            if (singleArray.size() == 2)
+            {
+                Cards tmp = planeArray[0];
+                tmp.add(singleArray);
+                return tmp;
+            }
+        }
+
+        // 3. 飞机
+        return planeArray[0];
+    }
+
+    if (hasTriple)
+    {
+        if (PlayHand(seqTripleArray[0]).getCardPoint() < Card::CardPoint::Card_A)
+        {
+            for (Card::CardPoint point = Card::CardPoint::Card_3; point < Card::CardPoint::Card_2; ++point)
+            {
+                int pointCount = backup.pointCount(point);
+                if (pointCount == 1)
+                {
+                    Cards single = Strategy(m_player, backup).findSamePointCards(point, 1);
+                    Cards tmp = seqTripleArray[0];
+                    tmp.add(single);
+                    return tmp;
+                }
+                else if (pointCount == 2)
+                {
+                    Cards pair = Strategy(m_player, backup).findSamePointCards(point, 2);
+                    Cards tmp = seqTripleArray[0];
+                    tmp.add(pair);
+                    return tmp;
+                }
+            }
+        }
+        // 不带副牌
+        return seqTripleArray[0];
+    }
+
     return Cards();
 }
 

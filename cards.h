@@ -26,6 +26,10 @@ public:
     // 添加扑克牌
     inline void add(const Card& card) { m_cards.insert(card); }
     inline void add(const Cards& cards) { m_cards.unite(cards.m_cards); }
+    inline void add(const QVector<Cards>& v_cards)
+    {
+        for (const auto& cards : v_cards) m_cards.unite(cards.m_cards);
+    }
 
     Cards& operator<<(const Card& card)
     {
