@@ -24,6 +24,24 @@ Cards Strategy::makeStrategy() const
 
 Cards Strategy::firstPlay() const
 {
+    // 判断玩家手中是否只剩单一的牌型
+    PlayHand hand(m_cards);
+    if (hand.getHandType() != PlayHand::HandType::Hand_Unknown) return m_cards;
+
+    // 不是单一牌型
+    // 判断玩家手中是否有顺子
+    QVector<Cards> optimalSeq = pickOptimalSeqSingles();
+    if (!optimalSeq.isEmpty())
+    {
+        // 得到单牌的数量
+        int baseNum = (int)findCardsByCount(1).size();
+        // 把得到的顺子的集合从玩家手中删除
+        Cards save = m_cards;
+        save.remove(optimalSeq);
+        int lastNum = (int)Strategy(m_player, save).findCardsByCount(1).size();
+        if (lastNum < baseNum) return optimalSeq[0];
+    }
+
     return Cards();
 }
 
