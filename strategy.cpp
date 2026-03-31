@@ -85,7 +85,7 @@ Cards Strategy::firstPlay() const
 
     if (hasPlane)
     {
-        // 1. 飞机带两个对儿
+        // 1. 飞机带两个对
         QVector<Cards> pairArray;
         for (Card::CardPoint point = Card::CardPoint::Card_3; point < Card::CardPoint::Card_J; ++point)
         {
@@ -150,7 +150,7 @@ Cards Strategy::firstPlay() const
         return seqTripleArray[0];
     }
 
-    // 单牌或者对儿牌
+    // 单牌或者对牌
     Player* nextPlayer = m_player->getNextPlayer();
     auto retSingleOrPair = [&](Card::CardPoint start, Card::CardPoint end, int step) -> Cards
     {

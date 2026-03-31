@@ -115,6 +115,8 @@ public:
 public:
     virtual void prepareCallLord() = 0; // 准备叫地主
     virtual void preparePlayHand() = 0; // 准备出牌
+    virtual void thinkCallLord() = 0;   // 考虑叫地主
+    virtual void thinkPlayHand() = 0;   // 考虑出牌
 
     // == 信号 ==
 signals:

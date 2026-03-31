@@ -14,6 +14,11 @@ public:
 
     void prepareCallLord() override;
     void preparePlayHand() override;
+
+    // 考虑叫地主
+    void thinkCallLord() override;
+    // 考虑出牌
+    void thinkPlayHand() override;
 };
 
 #endif // USERPLAYER_H

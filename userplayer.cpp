@@ -13,3 +13,11 @@ void UserPlayer::prepareCallLord()
 void UserPlayer::preparePlayHand()
 {
 }
+
+void UserPlayer::thinkCallLord()
+{
+}
+
+void UserPlayer::thinkPlayHand()
+{
+}
