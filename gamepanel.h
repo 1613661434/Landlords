@@ -7,6 +7,7 @@
 #include <QTimer>
 #include "gamecontrol.h"
 #include "cardpanel.h"
+#include "animationwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -23,6 +24,15 @@ private:
     {
         Horizontal,
         Vertical
+    };
+    enum class AnimationType : char
+    {
+        Score,
+        Seq_Single,
+        Seq_Pair,
+        Plane,
+        Bomb,
+        JokerBomb
     };
     struct PlayerContext
     {
@@ -57,6 +67,7 @@ private:
     QPoint m_baseCardPos;
     GameControl::GameStatus m_gameStatus;
     QTimer* m_timer;
+    AnimationWindow* m_animation;
 
 public:
     GamePanel(QWidget* parent = nullptr);
@@ -93,6 +104,9 @@ public:
     void onPlayerStatusChanged(Player* player, GameControl::PlayerStatus status);
     // 处理玩家抢地主
     void onGrabLordBet(Player* player, int point, bool isFirst);
+
+    // 显示特效动画
+    void showAnimation(AnimationType type, int point = 0);
 
 protected:
     // 绘图

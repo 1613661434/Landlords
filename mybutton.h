@@ -26,10 +26,7 @@ public:
 
         // DEBUG
         // bool loadOk = m_pixmap.load(m_normal);
-        // if (!loadOk)
-        // {
-        //     qDebug() << "[MyButton] 普通状态图片加载失败：" << m_normal;
-        // }
+        // if (!loadOk) qDebug() << "[MyButton] 普通状态图片加载失败：" << m_normal;
 
         update();
     }

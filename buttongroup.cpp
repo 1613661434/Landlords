@@ -51,11 +51,11 @@ void ButtonGroup::initButtons()
             { emit betPoint(3); });
 }
 
-void ButtonGroup::selectPanel(ButtonGroup::Panel type, int point)
+void ButtonGroup::selectPanel(Panel type, int point)
 {
     ui->stackedWidget->setCurrentIndex((int)type);
 
-    if (type != ButtonGroup::Panel::CallLord) return;
+    if (type != Panel::CallLord) return;
     if (point == 0)
     {
         ui->oneScore->setVisible(true);

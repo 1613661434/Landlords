@@ -48,8 +48,8 @@ public:
     inline Player* getOwner() const { return m_owner; }
 
 protected:
-    void paintEvent(QPaintEvent* event);
-    void mousePressEvent(QMouseEvent* event);
+    void paintEvent(QPaintEvent* ev) override;
+    void mousePressEvent(QMouseEvent* ev) override;
 
 signals:
 };

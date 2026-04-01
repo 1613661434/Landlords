@@ -5,12 +5,12 @@ CardPanel::CardPanel(QWidget* parent)
 {
 }
 
-void CardPanel::paintEvent(QPaintEvent* event)
+void CardPanel::paintEvent(QPaintEvent* ev)
 {
     QPainter p(this);
     p.drawPixmap(rect(), m_isFront ? m_front : m_back);
 }
 
-void CardPanel::mousePressEvent(QMouseEvent* event)
+void CardPanel::mousePressEvent(QMouseEvent* ev)
 {
 }

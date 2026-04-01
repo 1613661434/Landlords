@@ -31,6 +31,9 @@ GamePanel::GamePanel(QWidget* parent)
     // 定时器实例化
     m_timer = new QTimer(this);
     connect(m_timer, &QTimer::timeout, this, &GamePanel::onDispatchCard);
+
+    // 动画效果窗口类实例化
+    m_animation = new AnimationWindow(this);
 }
 
 GamePanel::~GamePanel()
@@ -107,7 +110,8 @@ void GamePanel::initButtonsGroup()
     connect(ui->btnGroup, &ButtonGroup::playHand, this, [this]() {});
     connect(ui->btnGroup, &ButtonGroup::pass, this, [this]() {});
     connect(ui->btnGroup, &ButtonGroup::betPoint, this, [this](int point)
-            { m_gameCtl->getUserPlayer()->grabLordBet(point); });
+            { m_gameCtl->getUserPlayer()->grabLordBet(point);
+             ui->btnGroup->selectPanel(ButtonGroup::Panel::Empty); });
 }
 
 void GamePanel::initPlayerContext()
@@ -180,15 +184,12 @@ void GamePanel::initGameScene()
         m_last3Card.push_back(panel);
     }
     // 扑克牌的位置
-    m_baseCardPos = QPoint((width() - m_cardSize.width()) / 2, (height() - m_cardSize.height()) / 2 - 100);
+    m_baseCardPos = QPoint((width() - m_cardSize.width()) / 2, height() / 2 - 100);
     m_baseCard->move(m_baseCardPos);
     m_moveCard->move(m_baseCardPos);
 
     int base = (width() - 3 * m_cardSize.width() - 2 * 10) / 2;
-    for (int i = 0; i < 3; ++i)
-    {
-        m_last3Card[i]->move(base + (m_cardSize.width() + 10) * i, 20);
-    }
+    for (int i = 0; i < 3; ++i) m_last3Card[i]->move(base + (m_cardSize.width() + 10) * i, 20);
 }
 
 void GamePanel::gameStatusPrecess(GameControl::GameStatus status)
@@ -231,10 +232,7 @@ void GamePanel::startDispatchCard()
         it.value()->hide();
     }
     // 隐藏三张底牌
-    for (int i = 0, size = (int)m_last3Card.size(); i < size; ++i)
-    {
-        m_last3Card.at(i)->hide();
-    }
+    for (int i = 0, size = (int)m_last3Card.size(); i < size; ++i) m_last3Card.at(i)->hide();
     // 重置玩家的窗口上下文信息
     const int index = m_playerList.indexOf(m_gameCtl->getUserPlayer());
     for (int i = 0, size = (int)m_playerList.size(); i < size; ++i)
@@ -288,13 +286,9 @@ void GamePanel::cardMoveStep(Player* player, int curPos)
 
     // 临界状态处理
     if (curPos == 0)
-    {
         m_moveCard->show();
-    }
     else if (curPos >= 100)
-    {
         m_moveCard->hide();
-    }
 }
 
 void GamePanel::disposCard(Player* player, const Cards& cards)
@@ -383,10 +377,7 @@ void GamePanel::onPlayerStatusChanged(Player* player, GameControl::PlayerStatus 
     switch (status)
     {
     case GameControl::PlayerStatus::ThinkingForCallLord:
-        if (player == m_gameCtl->getUserPlayer())
-        {
-            ui->btnGroup->selectPanel(ButtonGroup::Panel::CallLord, m_gameCtl->getPlayerMaxBet());
-        }
+        if (player == m_gameCtl->getUserPlayer()) ui->btnGroup->selectPanel(ButtonGroup::Panel::CallLord, m_gameCtl->getPlayerMaxBet());
         break;
     case GameControl::PlayerStatus::ThinkingForPlayHand:
         break;
@@ -406,17 +397,36 @@ void GamePanel::onGrabLordBet(Player* player, int point, bool isFirst)
     else
     {
         if (isFirst)
-        {
             context.info->setPixmap(QPixmap(":/images/jiaodizhu.png"));
-        }
         else
-        {
             context.info->setPixmap(QPixmap(":/images/qiangdizhu.png"));
-        }
     }
     context.info->show();
     // 显示抢地主的分数
+    showAnimation(AnimationType::Score, point);
     // 播放分数的背景音乐
+}
+
+void GamePanel::showAnimation(AnimationType type, int point)
+{
+    switch (type)
+    {
+    case AnimationType::Score:
+        m_animation->setFixedSize(160, 98);
+        m_animation->move((width() - m_animation->width()) / 2, (height() - m_animation->height()) / 2 - 140);
+        m_animation->showBetScore(point);
+        return;
+    case AnimationType::Seq_Single:
+    case AnimationType::Seq_Pair:
+        break;
+    case AnimationType::Plane:
+        break;
+    case AnimationType::Bomb:
+        break;
+    case AnimationType::JokerBomb:
+        break;
+    }
+    m_animation->show();
 }
 
 void GamePanel::paintEvent(QPaintEvent* ev)

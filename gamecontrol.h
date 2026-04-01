@@ -72,7 +72,7 @@ public:
     inline void startLordCard()
     {
         m_currPlayer->prepareCallLord();
-        emit playerStatusChanged(m_currPlayer, GameControl::PlayerStatus::ThinkingForCallLord);
+        emit playerStatusChanged(m_currPlayer, PlayerStatus::ThinkingForCallLord);
     }
 
     // 成为地主
@@ -102,11 +102,11 @@ public:
 
 signals:
     // 玩家状态变化
-    void playerStatusChanged(Player* player, GameControl::PlayerStatus status);
+    void playerStatusChanged(Player* player, PlayerStatus status);
     // 通知玩家抢地主了
     void notifyGrabLordBet(Player* player, int point, bool isFirst);
     // 游戏状态变化
-    void gameStatusChanged(GameControl::GameStatus status);
+    void gameStatusChanged(GameStatus status);
 };
 
 #endif // GAMECONTROL_H

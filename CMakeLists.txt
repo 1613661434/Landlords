@@ -34,6 +34,7 @@ qt_add_executable(Landlords
     playhand.h playhand.cpp
     strategy.h strategy.cpp
     robotgraplord.h robotgraplord.cpp
+    animationwindow.h animationwindow.cpp
 )
 
 target_link_libraries(Landlords
