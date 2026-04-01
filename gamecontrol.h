@@ -88,6 +88,7 @@ public:
     void onGrabBet(Player* player, int point);
 
     // 处理出牌
+    void onPlayHand(Player* player, Cards& cards);
 
     // Get&Set
     inline Robot* getLeftRobot() const { return m_robotLeft; }

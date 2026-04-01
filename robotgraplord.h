@@ -8,9 +8,9 @@ class RobotGrapLord : public QThread
 {
     Q_OBJECT
 public:
-    explicit RobotGrapLord(Robot* robot, QThread* parent = nullptr);
+    explicit RobotGrapLord(Robot* robot, QObject* parent = nullptr);
 
-private:
+protected:
     void run() override;
 
 private:

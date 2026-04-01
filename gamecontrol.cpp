@@ -155,3 +155,7 @@ void GameControl::onGrabBet(Player* player, int point)
     emit playerStatusChanged(m_currPlayer, GameControl::PlayerStatus::ThinkingForCallLord);
     m_currPlayer->prepareCallLord();
 }
+
+void GameControl::onPlayHand(Player* player, Cards& cards)
+{
+}

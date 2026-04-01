@@ -98,9 +98,13 @@ public:
     inline void storeDispatchCard(Card& card) { m_cards.add(card); }
     inline void storeDispatchCard(Cards& cards) { m_cards.add(cards); }
 
-    inline Cards getCards() const { return m_cards; }             // 得到所有牌
-    inline void clearCards() { m_cards.clear(); }                 // 清空所有牌
-    inline void playHand(Cards& cards) { m_cards.remove(cards); } // 出牌
+    inline Cards getCards() const { return m_cards; } // 得到所有牌
+    inline void clearCards() { m_cards.clear(); }     // 清空所有牌
+    inline void playHand(Cards& cards)                // 出牌
+    {
+        m_cards.remove(cards);
+        emit notifyPlayHand(this, cards);
+    }
 
     // 待处理扑克牌相关
     inline void setPendingInfo(Player* player, Cards& cards)
@@ -122,6 +126,8 @@ public:
 signals:
     // 通知已经叫地主下注
     void notifyGrabLordBet(Player* player, int point);
+    // 通知已经出牌
+    void notifyPlayHand(Player* player, Cards& cards);
 };
 
 #endif // PLAYER_H
