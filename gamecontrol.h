@@ -49,6 +49,7 @@ private:
     Cards m_pendCards;
     Cards m_allCards;
     BetRecord m_betRecord;
+    int m_lordBetPoint;
 
 public:
     explicit GameControl(QObject* parent = nullptr);
@@ -76,7 +77,7 @@ public:
     }
 
     // 成为地主
-    void becomeLord(Player* player);
+    void becomeLord(Player* player, int point);
 
     // 清空所有玩家的得分
     void clearPlayerScore();
@@ -104,10 +105,14 @@ public:
 signals:
     // 玩家状态变化
     void playerStatusChanged(Player* player, PlayerStatus status);
-    // 通知玩家抢地主了
-    void notifyGrabLordBet(Player* player, int point, bool isFirst);
     // 游戏状态变化
     void gameStatusChanged(GameStatus status);
+    // 通知玩家抢地主了
+    void notifyGrabLordBet(Player* player, int point, bool isFirst);
+    // 通知玩家出牌了
+    void notifyPlayHand(Player* player, Cards& cards);
+    // 给玩家传递出牌数据
+    void pendingInfo(Player* player, Cards& cards);
 };
 
 #endif // GAMECONTROL_H

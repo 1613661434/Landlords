@@ -12,7 +12,7 @@ class Player : public QObject
 public:
     enum class Role : char
     {
-        Load,
+        Lord,
         Farmer
     }; // 角色
 
@@ -98,6 +98,13 @@ public:
     inline void storeDispatchCard(Card& card) { m_cards.add(card); }
     inline void storeDispatchCard(Cards& cards) { m_cards.add(cards); }
 
+    // 存储出牌玩家对象和打出的牌
+    inline void storePendingInfo(Player* player, const Cards& cards)
+    {
+        m_pendPlayer = player;
+        m_pendCards = cards;
+    }
+
     inline Cards getCards() const { return m_cards; } // 得到所有牌
     inline void clearCards() { m_cards.clear(); }     // 清空所有牌
     inline void playHand(Cards& cards)                // 出牌
@@ -107,7 +114,7 @@ public:
     }
 
     // 待处理扑克牌相关
-    inline void setPendingInfo(Player* player, Cards& cards)
+    inline void setPendingInfo(Player* player, const Cards& cards)
     {
         m_pendPlayer = player;
         m_pendCards = cards;
