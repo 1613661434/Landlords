@@ -1,7 +1,8 @@
 #include "gamepanel.h"
 #include "ui_gamepanel.h"
-#include <QRandomGenerator>
 #include "ol_enum_char_ops.h"
+#include "playhand.h"
+#include <QRandomGenerator>
 
 GamePanel::GamePanel(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::GamePanel)
@@ -407,6 +408,53 @@ void GamePanel::onGrabLordBet(Player* player, int point, bool isFirst)
     // 播放分数的背景音乐
 }
 
+void GamePanel::onDisposePlayHand(Player* player, Cards& cards)
+{
+    // 1. 隐藏上一轮打出的牌
+    hidePlayerDropCards(player);
+    // 存储玩家打出的牌
+    auto it = m_contextMap.find(player);
+    if (it != m_contextMap.end()) it->lastCards = cards;
+
+    // 2. 根据牌型播放游戏特效
+    PlayHand hand(cards);
+    PlayHand::HandType type = hand.getHandType();
+    switch (type)
+    {
+    case PlayHand::HandType::Hand_Plane:
+    case PlayHand::HandType::Hand_Plane_Two_Single:
+    case PlayHand::HandType::Hand_Plane_Two_Pair:
+        showAnimation(AnimationType::Plane);
+        break;
+    case PlayHand::HandType::Hand_Seq_Single:
+        showAnimation(AnimationType::Seq_Single);
+        break;
+    case PlayHand::HandType::Hand_Seq_Pair:
+        showAnimation(AnimationType::Seq_Pair);
+        break;
+    case PlayHand::HandType::Hand_Bomb:
+        showAnimation(AnimationType::Bomb);
+        break;
+    case PlayHand::HandType::Hand_Bomb_Jokers:
+        showAnimation(AnimationType::JokerBomb);
+        break;
+    default:
+        break;
+    }
+
+    // 如果玩家打出的是空牌(不出牌), 显示提示信息
+    if (cards.isEmpty())
+    {
+        it->info->setPixmap(QPixmap(":/images/pass.png"));
+        it->info->show();
+    }
+
+    // 3. 更新玩家剩余的牌
+    updatePlayerCards(player);
+
+    // 4. 播放提示音乐
+}
+
 void GamePanel::showAnimation(AnimationType type, int point)
 {
     switch (type)
@@ -427,6 +475,24 @@ void GamePanel::showAnimation(AnimationType type, int point)
         break;
     }
     m_animation->show();
+}
+
+void GamePanel::hidePlayerDropCards(Player* player)
+{
+    auto it = m_contextMap.find(player);
+    if (it == m_contextMap.end()) return;
+
+    if (it->lastCards.isEmpty())
+    {
+        it->info->hide();
+    }
+    else
+    {
+        // Cards --> Card
+        CardList list = it->lastCards.toCardList();
+        for (const auto& card : list) m_cardMap[card]->hide();
+        it->lastCards.clear();
+    }
 }
 
 void GamePanel::paintEvent(QPaintEvent* ev)

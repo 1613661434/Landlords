@@ -104,9 +104,13 @@ public:
     void onPlayerStatusChanged(Player* player, GameControl::PlayerStatus status);
     // 处理玩家抢地主
     void onGrabLordBet(Player* player, int point, bool isFirst);
+    // 处理玩家的出牌
+    void onDisposePlayHand(Player* player, Cards& cards);
 
     // 显示特效动画
     void showAnimation(AnimationType type, int point = 0);
+    // 隐藏玩家打出的牌
+    void hidePlayerDropCards(Player* player);
 
 protected:
     // 绘图
