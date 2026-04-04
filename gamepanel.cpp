@@ -49,9 +49,10 @@ void GamePanel::gameControlInit()
     // 得到三个玩家的实例对象（顺序：左侧机器人，右侧机器人，当前玩家）
     m_playerList << m_gameCtl->getLeftRobot() << m_gameCtl->getRightRobot() << m_gameCtl->getUserPlayer();
 
+    connect(m_gameCtl, &GameControl::gameStatusChanged, this, &GamePanel::gameStatusPrecess);
     connect(m_gameCtl, &GameControl::playerStatusChanged, this, &GamePanel::onPlayerStatusChanged);
     connect(m_gameCtl, &GameControl::notifyGrabLordBet, this, &GamePanel::onGrabLordBet);
-    connect(m_gameCtl, &GameControl::gameStatusChanged, this, &GamePanel::gameStatusPrecess);
+    connect(m_gameCtl, &GameControl::notifyPlayHand, this, &GamePanel::onDisposePlayHand);
 }
 
 void GamePanel::updatePlayerScore()
@@ -332,6 +333,36 @@ void GamePanel::updatePlayerCards(Player* player)
             int topY = cardsRect.top() + (cardsRect.height() - (size - 1) * cardSpace - panel->height()) / 2;
             panel->move(leftX, topY + i * cardSpace);
         }
+    }
+
+    // 显示玩家打出的牌
+    // 得到当前玩家的出牌区域以及本轮打出的牌
+    QRect playCardRect = m_contextMap[player].playHandRect;
+    Cards lastCards = m_contextMap[player].lastCards;
+    if (lastCards.isEmpty()) return;
+
+    int playSpacing = 24;
+    CardList lastCardList = lastCards.toCardList();
+    CardList::ConstIterator it = lastCardList.constBegin();
+    for (int i = 0; it != lastCardList.constEnd(); ++it, ++i)
+    {
+        CardPanel* panel = m_cardMap[*it];
+        panel->setFrontSide(true);
+        panel->raise();
+        // 将打出的牌移动到出牌区域
+        if (m_contextMap[player].align == CardAlign::Horizontal)
+        {
+            int left = playCardRect.left() + (playCardRect.width() - (lastCardList.size() - 1) * playSpacing - panel->width()) / 2;
+            int top = playCardRect.top() + (playCardRect.height() - panel->height()) / 2;
+            panel->move(left + i * playSpacing, top);
+        }
+        else
+        {
+            int left = playCardRect.left() + (playCardRect.width() - panel->width()) / 2;
+            int top = playCardRect.top();
+            panel->move(left, top + i * playSpacing);
+        }
+        panel->show();
     }
 }
 
