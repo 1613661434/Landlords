@@ -412,8 +412,30 @@ void GamePanel::onPlayerStatusChanged(Player* player, GameControl::PlayerStatus 
         if (player == m_gameCtl->getUserPlayer()) ui->btnGroup->selectPanel(ButtonGroup::Panel::CallLord, m_gameCtl->getPlayerMaxBet());
         break;
     case GameControl::PlayerStatus::ThinkingForPlayHand:
+        // 隐藏上一轮打出的牌
+        hidePlayerDropCards(player);
+        if (player == m_gameCtl->getUserPlayer())
+        {
+            // 取出出牌玩家的对象
+            Player* pendPlayer = m_gameCtl->getPendPlayer();
+            if (pendPlayer == m_gameCtl->getUserPlayer() || pendPlayer == nullptr)
+                ui->btnGroup->selectPanel(ButtonGroup::Panel::PlayCard);
+            else
+                ui->btnGroup->selectPanel(ButtonGroup::Panel::PassOrPlay);
+        }
+        else
+        {
+            ui->btnGroup->selectPanel(ButtonGroup::Panel::Empty);
+        }
         break;
     case GameControl::PlayerStatus::Winning:
+        m_contextMap[m_gameCtl->getLeftRobot()].isFrontSide = true;
+        m_contextMap[m_gameCtl->getRightRobot()].isFrontSide = true;
+        updatePlayerCards(m_gameCtl->getLeftRobot());
+        updatePlayerCards(m_gameCtl->getRightRobot());
+        // 更新玩家的得分
+        updatePlayerScore();
+        m_gameCtl->setCurrentPlayer(player);
         break;
     }
 }
@@ -441,9 +463,7 @@ void GamePanel::onGrabLordBet(Player* player, int point, bool isFirst)
 
 void GamePanel::onDisposePlayHand(Player* player, Cards& cards)
 {
-    // 1. 隐藏上一轮打出的牌
-    hidePlayerDropCards(player);
-    // 存储玩家打出的牌
+    // 1. 存储玩家打出的牌
     auto it = m_contextMap.find(player);
     if (it != m_contextMap.end()) it->lastCards = cards;
 
