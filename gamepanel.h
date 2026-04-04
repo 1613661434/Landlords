@@ -97,6 +97,8 @@ public:
     void disposCard(Player* player, const Cards& cards);
     // 更新扑克牌在窗口中的显示
     void updatePlayerCards(Player* player);
+    // 加载玩家头像
+    QPixmap loadRoleImage(Player::Sex sex, Player::Direction direct, Player::Role role);
 
     // 定时器的处理动作
     void onDispatchCard();

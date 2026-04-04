@@ -220,6 +220,23 @@ void GamePanel::gameStatusPrecess(GameControl::GameStatus status)
         break;
     }
     case GameControl::GameStatus::PlayingHand:
+        // 隐藏发牌区的底牌和移动的牌
+        m_baseCard->hide();
+        m_moveCard->hide();
+        // 显示留给地主的三张底牌
+        for (int i = 0, size = (int)m_last3Card.size(); i < size; ++i) m_last3Card.at(i)->show();
+
+        for (int i = 0, size = (int)m_playerList.size(); i < size; ++i)
+        {
+            PlayerContext& context = m_contextMap[m_playerList.at(i)];
+            // 隐藏各个玩家抢地主过程中的提示信息
+            context.info->hide();
+            // 显示各个玩家的头像
+            Player* player = m_playerList.at(i);
+            QPixmap pixmap = loadRoleImage(player->getSex(), player->getDirection(), player->getRole());
+            context.roleImg->setPixmap(pixmap);
+            context.roleImg->show();
+        }
         break;
     }
 }
@@ -364,6 +381,39 @@ void GamePanel::updatePlayerCards(Player* player)
         }
         panel->show();
     }
+}
+
+QPixmap GamePanel::loadRoleImage(Player::Sex sex, Player::Direction direct, Player::Role role)
+{
+    // 找图片
+    QVector<QString> lordMan;
+    QVector<QString> lordWoman;
+    QVector<QString> farmerMan;
+    QVector<QString> farmerWoman;
+    lordMan << ":/images/lord_man_1.png" << ":/images/lord_man_2.png";
+    lordWoman << ":/images/lord_woman_1.png" << ":/images/lord_woman_2.png";
+    farmerMan << ":/images/farmer_man_1.png" << ":/images/farmer_man_2.png";
+    farmerWoman << ":/images/farmer_woman_1.png" << ":/images/farmer_woman_2.png";
+
+    // 加载图片 QImage
+    QImage image;
+    int random = QRandomGenerator::global()->bounded(2);
+    if (sex == Player::Sex::Man && role == Player::Role::Lord)
+        image.load(lordMan.at(random));
+    else if (sex == Player::Sex::Man && role == Player::Role::Farmer)
+        image.load(farmerMan.at(random));
+    else if (sex == Player::Sex::Woman && role == Player::Role::Lord)
+        image.load(lordWoman.at(random));
+    else if (sex == Player::Sex::Woman && role == Player::Role::Farmer)
+        image.load(farmerWoman.at(random));
+
+    QPixmap pixmap;
+    if (direct == Player::Direction::Left)
+        pixmap = QPixmap::fromImage(image);
+    else
+        pixmap = QPixmap::fromImage(image.flipped(Qt::Horizontal));
+
+    return pixmap;
 }
 
 void GamePanel::onDispatchCard()
