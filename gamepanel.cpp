@@ -3,6 +3,7 @@
 #include "ol_enum_char_ops.h"
 #include "playhand.h"
 #include <QRandomGenerator>
+#include <QMouseEvent>
 
 GamePanel::GamePanel(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::GamePanel)
@@ -47,12 +48,19 @@ void GamePanel::gameControlInit()
     m_gameCtl = new GameControl(this);
     m_gameCtl->playerInit();
     // 得到三个玩家的实例对象（顺序：左侧机器人，右侧机器人，当前玩家）
-    m_playerList << m_gameCtl->getLeftRobot() << m_gameCtl->getRightRobot() << m_gameCtl->getUserPlayer();
+    Robot* leftRobot = m_gameCtl->getLeftRobot();
+    Robot* rightRobot = m_gameCtl->getRightRobot();
+    UserPlayer* user = m_gameCtl->getUserPlayer();
+    m_playerList << leftRobot << rightRobot << user;
 
     connect(m_gameCtl, &GameControl::gameStatusChanged, this, &GamePanel::gameStatusPrecess);
     connect(m_gameCtl, &GameControl::playerStatusChanged, this, &GamePanel::onPlayerStatusChanged);
     connect(m_gameCtl, &GameControl::notifyGrabLordBet, this, &GamePanel::onGrabLordBet);
     connect(m_gameCtl, &GameControl::notifyPlayHand, this, &GamePanel::onDisposePlayHand);
+
+    connect(leftRobot, &Player::notifyPickCards, this, &GamePanel::disposeCard);
+    connect(rightRobot, &Player::notifyPickCards, this, &GamePanel::disposeCard);
+    connect(user, &Player::notifyPickCards, this, &GamePanel::disposeCard);
 }
 
 void GamePanel::updatePlayerScore()
@@ -311,7 +319,7 @@ void GamePanel::cardMoveStep(Player* player, int curPos)
         m_moveCard->hide();
 }
 
-void GamePanel::disposCard(Player* player, const Cards& cards)
+void GamePanel::disposeCard(Player* player, const Cards& cards)
 {
     CardList list = cards.toCardList();
     for (int i = 0, size = (int)list.size(); i < size; ++i)
@@ -327,10 +335,18 @@ void GamePanel::updatePlayerCards(Player* player)
 {
     Cards cards = player->getCards();
     CardList list = cards.toCardList();
+
     // 取出展示扑克牌的区域
-    int cardSpace = 20;
-    QRect cardsRect = m_contextMap[player].cardRect;
-    for (int i = 0, size = (int)list.size(); i < size; ++i)
+    const int size = (int)list.size();
+    const int cardSpace = 20;
+    const QRect cardsRect = m_contextMap[player].cardRect;
+    const int leftX = cardsRect.left() + (cardsRect.width() - (size - 1) * cardSpace - m_cardSize.width()) / 2;
+    const int topY = cardsRect.top() + (cardsRect.height() - m_cardSize.height()) / 2;
+
+    m_userCards.clear();
+    m_userCardsRect = (size == 0) ? QRect() : QRect(leftX, topY, cardSpace * (size - 1) + m_cardSize.width(), m_cardSize.height());
+
+    for (int i = 0; i < size; ++i)
     {
         CardPanel* panel = m_cardMap[list.at(i)];
         panel->show();
@@ -340,16 +356,23 @@ void GamePanel::updatePlayerCards(Player* player)
         // 水平 or 垂直显示
         if (m_contextMap[player].align == GamePanel::CardAlign::Horizontal)
         {
-            int leftX = cardsRect.left() + (cardsRect.width() - (size - 1) * cardSpace - panel->width()) / 2;
-            int topY = cardsRect.top() + (cardsRect.height() - m_cardSize.height()) / 2;
-            if (panel->isSelected()) topY -= 10;
-            panel->move(leftX + cardSpace * i, topY);
+            if (panel->isSelected())
+                panel->move(leftX + cardSpace * i, topY - 10);
+            else
+                panel->move(leftX + cardSpace * i, topY);
+
+            int curWidth;
+            if (size - 1 == i)
+                curWidth = m_cardSize.width();
+            else
+                curWidth = cardSpace;
+            m_userCards.insert(panel, QRect(leftX + cardSpace * i, topY, curWidth, m_cardSize.height()));
         }
         else
         {
-            int leftX = cardsRect.left() + (cardsRect.width() - m_cardSize.width()) / 2;
-            int topY = cardsRect.top() + (cardsRect.height() - (size - 1) * cardSpace - panel->height()) / 2;
-            panel->move(leftX, topY + i * cardSpace);
+            int leftX_Vert = cardsRect.left() + (cardsRect.width() - m_cardSize.width()) / 2;
+            int topY_Vert = cardsRect.top() + (cardsRect.height() - (size - 1) * cardSpace - m_cardSize.height()) / 2;
+            panel->move(leftX_Vert, topY_Vert + i * cardSpace);
         }
     }
 
@@ -429,7 +452,6 @@ void GamePanel::onDispatchCard()
         Card card = m_gameCtl->takeOneCard();
         curPlayer->storeDispatchCard(card);
         // 发牌动画
-        disposCard(curPlayer, Cards(card));
         cardMoveStep(curPlayer, curMovePos);
         // 判断牌是否发完了
         if (m_gameCtl->getSurplusCards().cardCount() == 3)
@@ -636,6 +658,33 @@ void GamePanel::hidePlayerDropCards(Player* player)
 
 void GamePanel::paintEvent(QPaintEvent* ev)
 {
+    Q_UNUSED(ev)
     QPainter p(this);
     p.drawPixmap(rect(), m_bkImage);
+}
+
+void GamePanel::mouseMoveEvent(QMouseEvent* ev)
+{
+    Q_UNUSED(ev)
+    if (ev->buttons() & Qt::LeftButton)
+    {
+        QPoint pt = ev->pos();
+        if (!m_userCardsRect.contains(pt))
+        {
+            m_curSelCard = nullptr;
+        }
+        else
+        {
+            QList<CardPanel*> list = m_userCards.keys();
+            for (const auto& panel : list)
+            {
+                if (m_userCards[panel].contains(pt) && m_curSelCard != panel)
+                {
+                    // 点击这张扑克牌
+                    panel->clicked();
+                    m_curSelCard = panel;
+                }
+            }
+        }
+    }
 }

@@ -70,6 +70,8 @@ private:
     AnimationWindow* m_animation;
     CardPanel* m_curSelCard;
     QSet<CardPanel*> m_selectCards;
+    QRect m_userCardsRect;
+    QHash<CardPanel*, QRect> m_userCards;
 
 public:
     GamePanel(QWidget* parent = nullptr);
@@ -96,7 +98,7 @@ public:
     // 移动扑克牌
     void cardMoveStep(Player* player, int curPos);
     // 处理分发得到的扑克牌
-    void disposCard(Player* player, const Cards& cards);
+    void disposeCard(Player* player, const Cards& cards);
     // 更新扑克牌在窗口中的显示
     void updatePlayerCards(Player* player);
     // 加载玩家头像
@@ -123,5 +125,7 @@ public:
 protected:
     // 绘图
     void paintEvent(QPaintEvent* ev) override;
+    // 框选多张扑克牌
+    void mouseMoveEvent(QMouseEvent* ev) override;
 };
 #endif // GAMEPANEL_H

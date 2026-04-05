@@ -133,6 +133,8 @@ signals:
     void notifyGrabLordBet(Player* player, int point);
     // 通知已经出牌
     void notifyPlayHand(Player* player, Cards cards);
+    // 通知已经发牌了
+    void notifyPickCards(Player* player, const Cards& cards);
 };
 
 #endif // PLAYER_H

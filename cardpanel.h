@@ -47,6 +47,9 @@ public:
     inline void setOwner(Player* owner) { m_owner = owner; }
     inline Player* getOwner() const { return m_owner; }
 
+    // 模拟扑克牌的点击事件
+    inline void clicked() { emit cardSelected(Qt::LeftButton); };
+
 protected:
     void paintEvent(QPaintEvent* ev) override;
     void mousePressEvent(QMouseEvent* ev) override;
