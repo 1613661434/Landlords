@@ -2,8 +2,8 @@
 #define PLAYER_H
 
 #include <QObject>
+#include <QMutex>
 #include "cards.h"
-#include "ol_enum_char_ops.h"
 
 class Player : public QObject
 {
@@ -49,6 +49,8 @@ protected:
     Cards m_cards;
     Cards m_pendCards;
     Player* m_pendPlayer;
+    mutable QMutex m_cardMutex;
+    mutable QMutex m_roleMutex;
 
     // == 函数 ==
 public:
@@ -60,8 +62,8 @@ public:
     inline QString getName() const { return m_name; }
 
     // 角色
-    inline void setRole(Role role) { m_role = role; }
-    inline Role getRole() const { return m_role; }
+    void setRole(Role role);
+    Role getRole() const;
 
     // 性别
     inline void setSex(Sex sex) { m_sex = sex; }
@@ -95,8 +97,8 @@ public:
     inline void grabLordBet(int point) { emit notifyGrabLordBet(this, point); };
 
     // 存储扑克牌（发牌阶段）
-    inline void storeDispatchCard(Card& card) { m_cards.add(card); }
-    inline void storeDispatchCard(Cards& cards) { m_cards.add(cards); }
+    void storeDispatchCard(Card& card);
+    void storeDispatchCard(Cards& cards);
 
     // 存储出牌玩家对象和打出的牌
     inline void storePendingInfo(Player* player, const Cards& cards)
@@ -105,13 +107,9 @@ public:
         m_pendCards = cards;
     }
 
-    inline Cards getCards() const { return m_cards; } // 得到所有牌
-    inline void clearCards() { m_cards.clear(); }     // 清空所有牌
-    inline void playHand(Cards& cards)                // 出牌
-    {
-        m_cards.remove(cards);
-        emit notifyPlayHand(this, cards);
-    }
+    Cards getCards() const;      // 得到所有牌
+    void clearCards();           // 清空所有牌
+    void playHand(Cards& cards); // 出牌
 
     // 待处理扑克牌相关
     inline void setPendingInfo(Player* player, const Cards& cards)
@@ -134,7 +132,7 @@ signals:
     // 通知已经叫地主下注
     void notifyGrabLordBet(Player* player, int point);
     // 通知已经出牌
-    void notifyPlayHand(Player* player, Cards& cards);
+    void notifyPlayHand(Player* player, Cards cards);
 };
 
 #endif // PLAYER_H

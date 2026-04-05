@@ -101,8 +101,8 @@ void GameControl::becomeLord(Player* player, int point)
 
     QTimer::singleShot(1000, this, [this]()
                        {
-        emit gameStatusChanged(GameControl::GameStatus::PlayingHand);
-        emit playerStatusChanged(m_currPlayer,GameControl::PlayerStatus::ThinkingForPlayHand);
+        emit gameStatusChanged(GameStatus::PlayingHand);
+        emit playerStatusChanged(m_currPlayer,PlayerStatus::ThinkingForPlayHand);
         m_currPlayer->preparePlayHand(); });
 }
 
@@ -159,10 +159,11 @@ void GameControl::onGrabBet(Player* player, int point)
     m_currPlayer->prepareCallLord();
 }
 
-void GameControl::onPlayHand(Player* player, Cards& cards)
+void GameControl::onPlayHand(Player* player, Cards cards)
 {
     // 1. 将玩家出牌的信号转发给主界面
     emit notifyPlayHand(player, cards);
+
     // 2. 如果不是空牌, 给其他玩家发送信号, 保存出牌玩家对象和打出的牌
     if (!cards.isEmpty())
     {
@@ -170,6 +171,7 @@ void GameControl::onPlayHand(Player* player, Cards& cards)
         m_pendPlayer = player;
         emit pendingInfo(player, cards);
     }
+
     // 如果有炸弹, 底分翻倍
     PlayHand::HandType type = PlayHand(cards).getHandType();
     if (type == PlayHand::HandType::Hand_Bomb || type == PlayHand::HandType::Hand_Bomb_Jokers) m_lordBetPoint *= 2;
