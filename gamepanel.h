@@ -68,6 +68,8 @@ private:
     GameControl::GameStatus m_gameStatus;
     QTimer* m_timer;
     AnimationWindow* m_animation;
+    CardPanel* m_curSelCard;
+    QSet<CardPanel*> m_selectCards;
 
 public:
     GamePanel(QWidget* parent = nullptr);
@@ -108,6 +110,10 @@ public:
     void onGrabLordBet(Player* player, int point, bool isFirst);
     // 处理玩家的出牌
     void onDisposePlayHand(Player* player, Cards& cards);
+    // 处理玩家选牌
+    void onCardSelected(Qt::MouseButton button);
+    // 处理用户玩家出牌
+    void onUserPlayHand();
 
     // 显示特效动画
     void showAnimation(AnimationType type, int point = 0);

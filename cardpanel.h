@@ -52,6 +52,7 @@ protected:
     void mousePressEvent(QMouseEvent* ev) override;
 
 signals:
+    void cardSelected(Qt::MouseButton button);
 };
 
 #endif // CARDPANEL_H

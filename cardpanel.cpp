@@ -1,4 +1,5 @@
 #include "cardpanel.h"
+#include <QMouseEvent>
 
 CardPanel::CardPanel(QWidget* parent)
     : QWidget{parent}, m_isFront(true)
@@ -13,4 +14,5 @@ void CardPanel::paintEvent(QPaintEvent* ev)
 
 void CardPanel::mousePressEvent(QMouseEvent* ev)
 {
+    emit cardSelected(ev->button());
 }

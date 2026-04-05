@@ -94,6 +94,7 @@ void GamePanel::cropImage(const QPixmap& pixmap, int x, int y, const Card& card)
     panel->setCard(card);
     panel->hide();
     m_cardMap.insert(card, panel);
+    connect(panel, &CardPanel::cardSelected, this, &GamePanel::onCardSelected);
 }
 
 void GamePanel::initButtonsGroup()
@@ -554,6 +555,43 @@ void GamePanel::onDisposePlayHand(Player* player, Cards& cards)
     updatePlayerCards(player);
 
     // 4. 播放提示音乐
+}
+
+void GamePanel::onCardSelected(Qt::MouseButton button)
+{
+    // 1. 判断是不是出牌状态
+    if (m_gameStatus != GameControl::GameStatus::PlayingHand) return;
+
+    // 2. 判断发出信号的牌的所有者是不是当前用户玩家
+    CardPanel* panel = static_cast<CardPanel*>(sender());
+    if (panel->getOwner() != m_gameCtl->getUserPlayer()) return;
+
+    // 3. 保存当前被选中的牌的窗口对象
+    m_curSelCard = panel;
+
+    // 4. 判断参数的鼠标键是左键还是右键
+    if (button == Qt::LeftButton)
+    {
+        // 设置扑克牌的选中状态
+        panel->setSelected(!panel->isSelected());
+        // 更新扑克牌在窗口中的显示
+        updatePlayerCards(panel->getOwner());
+        // 保存或删除扑克牌窗口对象
+        QSet<CardPanel*>::const_iterator it = m_selectCards.find(panel);
+        if (it == m_selectCards.constEnd())
+            m_selectCards.insert(panel);
+        else
+            m_selectCards.erase(it);
+    }
+    else if (button == Qt::RightButton)
+    {
+        // 调用出牌按钮的槽函数
+        onUserPlayHand();
+    }
+}
+
+void GamePanel::onUserPlayHand()
+{
 }
 
 void GamePanel::showAnimation(AnimationType type, int point)
