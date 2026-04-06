@@ -317,7 +317,7 @@ QVector<Cards> Strategy::findCardType(PlayHand hand, bool isBeat) const
     switch (type)
     {
     case PlayHand::HandType::Hand_Single:
-        return getCardsByCountFromPoint(beginPoint, 1); // BUG：按道理应该相同点数但是花色大的也加入，先这样子
+        return getCardsByCountFromPoint(beginPoint, 1);
     case PlayHand::HandType::Hand_Pair:
         return getCardsByCountFromPoint(beginPoint, 2);
     case PlayHand::HandType::Hand_Triple:

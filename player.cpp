@@ -29,13 +29,19 @@ Player::Role Player::getRole() const
 
 void Player::storeDispatchCard(Card& card)
 {
-    m_cards.add(card);
+    {
+        QMutexLocker locker(&m_cardMutex);
+        m_cards.add(card);
+    }
     emit notifyPickCards(this, Cards(card));
 }
 
 void Player::storeDispatchCard(Cards& cards)
 {
-    m_cards.add(cards);
+    {
+        QMutexLocker locker(&m_cardMutex);
+        m_cards.add(cards);
+    }
     emit notifyPickCards(this, cards);
 }
 
@@ -53,7 +59,9 @@ void Player::clearCards()
 
 void Player::playHand(Cards& cards)
 {
-    QMutexLocker locker(&m_cardMutex);
-    m_cards.remove(cards);
+    {
+        QMutexLocker locker(&m_cardMutex);
+        m_cards.remove(cards);
+    }
     emit notifyPlayHand(this, cards);
 }

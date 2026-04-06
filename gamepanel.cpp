@@ -659,9 +659,11 @@ void GamePanel::onUserPass()
     // 打出一个空的Cards对象
     Cards empty;
     userPlayer->playHand(empty);
+
     // 清空用户选择的牌(玩家可能选择了一些牌, 但是没有打出去)
     for (auto it = m_selectCards.begin(); it != m_selectCards.end(); ++it) (*it)->setSelected(false);
     m_selectCards.clear();
+
     // 更新玩家待出牌区域的牌
     updatePlayerCards(userPlayer);
 }
