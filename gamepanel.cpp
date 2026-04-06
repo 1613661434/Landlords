@@ -119,7 +119,7 @@ void GamePanel::initButtonsGroup()
                 // 修改游戏状态 -> 发牌
                 gameStatusPrecess(GameControl::GameStatus::DispatchCard); });
     connect(ui->btnGroup, &ButtonGroup::playHand, this, &GamePanel::onUserPlayHand);
-    connect(ui->btnGroup, &ButtonGroup::pass, this, [this]() {});
+    connect(ui->btnGroup, &ButtonGroup::pass, this, &GamePanel::onUserPass);
     connect(ui->btnGroup, &ButtonGroup::betPoint, this, [this](int point)
             { m_gameCtl->getUserPlayer()->grabLordBet(point);
              ui->btnGroup->selectPanel(ButtonGroup::Panel::Empty); });
@@ -642,6 +642,28 @@ void GamePanel::onUserPlayHand()
     m_gameCtl->getUserPlayer()->playHand(cs);
     // 清空容器
     m_selectCards.clear();
+}
+
+void GamePanel::onUserPass()
+{
+    // m_countDown->stopCountDown();
+    // 判断是不是用户玩家
+    Player* curPlayer = m_gameCtl->getCurrentPlayer();
+    Player* userPlayer = m_gameCtl->getUserPlayer();
+    if (curPlayer != userPlayer) return;
+
+    // 判断当前用户玩家是不是上一次出牌的玩家(可以不处理)
+    Player* pendPlayer = m_gameCtl->getPendPlayer();
+    if (pendPlayer == userPlayer || pendPlayer == nullptr) return;
+
+    // 打出一个空的Cards对象
+    Cards empty;
+    userPlayer->playHand(empty);
+    // 清空用户选择的牌(玩家可能选择了一些牌, 但是没有打出去)
+    for (auto it = m_selectCards.begin(); it != m_selectCards.end(); ++it) (*it)->setSelected(false);
+    m_selectCards.clear();
+    // 更新玩家待出牌区域的牌
+    updatePlayerCards(userPlayer);
 }
 
 void GamePanel::showAnimation(AnimationType type, int point)

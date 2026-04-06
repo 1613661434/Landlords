@@ -116,6 +116,8 @@ public:
     void onCardSelected(Qt::MouseButton button);
     // 处理用户玩家出牌
     void onUserPlayHand();
+    // 用户玩家放弃出牌
+    void onUserPass();
 
     // 显示特效动画
     void showAnimation(AnimationType type, int point = 0);
