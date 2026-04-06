@@ -118,7 +118,7 @@ void GamePanel::initButtonsGroup()
                 updatePlayerScore();
                 // 修改游戏状态 -> 发牌
                 gameStatusPrecess(GameControl::GameStatus::DispatchCard); });
-    connect(ui->btnGroup, &ButtonGroup::playHand, this, [this]() {});
+    connect(ui->btnGroup, &ButtonGroup::playHand, this, &GamePanel::onUserPlayHand);
     connect(ui->btnGroup, &ButtonGroup::pass, this, [this]() {});
     connect(ui->btnGroup, &ButtonGroup::betPoint, this, [this](int point)
             { m_gameCtl->getUserPlayer()->grabLordBet(point);
@@ -614,6 +614,34 @@ void GamePanel::onCardSelected(Qt::MouseButton button)
 
 void GamePanel::onUserPlayHand()
 {
+    // 判断游戏状态
+    if (m_gameStatus != GameControl::GameStatus::PlayingHand) return;
+
+    // 判断玩家是不是用户玩家
+    if (m_gameCtl->getCurrentPlayer() != m_gameCtl->getUserPlayer()) return;
+
+    // 判断要出的牌是否为空
+    if (m_selectCards.isEmpty()) return;
+
+    // 得到要打出的牌的牌型
+    Cards cs;
+    for (auto it = m_selectCards.cbegin(); it != m_selectCards.cend(); ++it) cs.add((*it)->getCard());
+    PlayHand hand(cs);
+    PlayHand::HandType type = hand.getHandType();
+    if (type == PlayHand::HandType::Hand_Unknown) return;
+
+    // 判断当前玩家的牌能不能压住上一家的牌
+    if (m_gameCtl->getPendPlayer() != m_gameCtl->getUserPlayer())
+    {
+        if (!hand.canBeat(PlayHand(m_gameCtl->getPendCards()))) return;
+    }
+
+    // m_countDown->stopCountDown();
+
+    // 通过玩家对象出牌
+    m_gameCtl->getUserPlayer()->playHand(cs);
+    // 清空容器
+    m_selectCards.clear();
 }
 
 void GamePanel::showAnimation(AnimationType type, int point)
