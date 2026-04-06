@@ -40,8 +40,8 @@ bool PlayHand::canBeat(const PlayHand& other) const
 void PlayHand::classify(const Cards& cards)
 {
     CardList list = cards.toCardList();
-    int cardRecord[(int)Card::CardPoint::Card_BJ];
-    memset(cardRecord, 0, sizeof(int) * (int)Card::CardPoint::Card_BJ);
+    int cardRecord[(int)Card::CardPoint::Card_End];
+    memset(cardRecord, 0, sizeof(int) * (int)Card::CardPoint::Card_End);
 
     for (int i = 0, size = list.size(); i < size; ++i)
     {
@@ -54,7 +54,7 @@ void PlayHand::classify(const Cards& cards)
     m_threeCard.clear();
     m_fourCard.clear();
 
-    for (Card::CardPoint i = Card::CardPoint::Card_Begin; i < Card::CardPoint::Card_BJ - 1; ++i)
+    for (Card::CardPoint i = Card::CardPoint::Card_3; i < Card::CardPoint::Card_End; ++i)
     {
         switch (cardRecord[(int)i])
         {
