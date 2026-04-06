@@ -36,6 +36,7 @@ qt_add_executable(Landlords
     robotgraplord.h robotgraplord.cpp
     animationwindow.h animationwindow.cpp
     robotplayhand.h robotplayhand.cpp
+    endingpanel.h endingpanel.cpp
 )
 
 target_link_libraries(Landlords

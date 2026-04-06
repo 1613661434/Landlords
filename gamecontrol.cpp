@@ -11,23 +11,23 @@ GameControl::GameControl(QObject* parent)
 void GameControl::playerInit()
 {
     // 对象实例化
-    m_robotLeft = new Robot("Robot_A", this);
-    m_robotRight = new Robot("Robot_B", this);
     m_user = new UserPlayer("Me", this);
+    m_robotLeft = new Robot("Robot_Left", this);
+    m_robotRight = new Robot("Robot_Right", this);
 
     // 头像的显示
+    m_user->setDirection(Player::Direction::Right);
     m_robotLeft->setDirection(Player::Direction::Left);
     m_robotRight->setDirection(Player::Direction::Right);
-    m_user->setDirection(Player::Direction::Right);
 
     // 性别
     Player::Sex sex;
     sex = (Player::Sex)QRandomGenerator::global()->bounded(2);
+    m_user->setSex(sex);
+    sex = (Player::Sex)QRandomGenerator::global()->bounded(2);
     m_robotLeft->setSex(sex);
     sex = (Player::Sex)QRandomGenerator::global()->bounded(2);
     m_robotRight->setSex(sex);
-    sex = (Player::Sex)QRandomGenerator::global()->bounded(2);
-    m_user->setSex(sex);
 
     // 出牌顺序
     // user
