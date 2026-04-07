@@ -123,6 +123,10 @@ public:
     void showAnimation(AnimationType type, int point = 0);
     // 隐藏玩家打出的牌
     void hidePlayerDropCards(Player* player);
+    // 显示玩家的最终得分
+    void showEndingScorePanel();
+    // 初始化闹钟倒计时
+    void initCountDown();
 
 protected:
     // 绘图
