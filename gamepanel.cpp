@@ -734,7 +734,7 @@ void GamePanel::showEndingScorePanel()
     animation->start();
 
     // 处理窗口信号
-    connect(panel, &EndingPanel::continueGame, this, [&]()
+    connect(panel, &EndingPanel::continueGame, this, [=]()
             {
          panel->close();
          panel->deleteLater();
