@@ -1,0 +1,32 @@
+#ifndef COUNTDOWN_H
+#define COUNTDOWN_H
+
+#include <QWidget>
+#include <QTimer>
+
+class CountDown : public QWidget
+{
+    Q_OBJECT
+private:
+    QPixmap m_emptyPixmap;
+    QPixmap m_clock;
+    QPixmap m_numberBase;
+    QPixmap m_number;
+    QTimer* m_timer;
+    int m_count;
+
+public:
+    explicit CountDown(QWidget* parent = nullptr);
+
+    void showCountDown();
+    void stopCountDown();
+
+protected:
+    void paintEvent(QPaintEvent* ev) override;
+
+signals:
+    void notMuchTime();
+    void timeout();
+};
+
+#endif // COUNTDOWN_H
