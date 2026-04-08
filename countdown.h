@@ -8,7 +8,7 @@ class CountDown : public QWidget
 {
     Q_OBJECT
 private:
-    QPixmap m_emptyPixmap;
+    static const QPixmap& emptyPixmap();
     QPixmap m_clock;
     QPixmap m_numberBase;
     QPixmap m_number;

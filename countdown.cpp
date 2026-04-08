@@ -1,12 +1,17 @@
 #include "countdown.h"
 #include <QPainter>
 
+const QPixmap& CountDown::emptyPixmap()
+{
+    static const QPixmap m_emptyPixmap;
+    return m_emptyPixmap;
+}
+
 CountDown::CountDown(QWidget* parent)
-    : QWidget{parent}
+    : QWidget{parent}, m_count(0)
 {
     setFixedSize(70, 70);
     m_timer = new QTimer(this);
-    m_emptyPixmap = QPixmap();
     m_clock.load(":/images/clock.png");
     m_numberBase.load(":/images/number.png");
 
@@ -23,8 +28,8 @@ CountDown::CountDown(QWidget* parent)
         } 
         else
         {
-            m_clock = m_emptyPixmap;
-            m_number = m_emptyPixmap;
+            m_clock = emptyPixmap();
+            m_number = emptyPixmap();
             m_timer->stop();
             emit timeout();
         }
@@ -35,15 +40,15 @@ void CountDown::showCountDown()
 {
     m_count = 15;
     m_clock.load(":/images/clock.png");
-    m_number = m_emptyPixmap;
+    m_number = emptyPixmap();
     m_timer->start(1000);
 }
 
 void CountDown::stopCountDown()
 {
     m_timer->stop();
-    m_clock = m_emptyPixmap;
-    m_number = m_emptyPixmap;
+    m_clock = emptyPixmap();
+    m_number = emptyPixmap();
     update();
 }
 
