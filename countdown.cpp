@@ -12,7 +12,8 @@ CountDown::CountDown(QWidget* parent)
 {
     setFixedSize(70, 70);
     m_timer = new QTimer(this);
-    m_clock.load(":/images/clock.png");
+    m_clock = emptyPixmap();
+    m_number = emptyPixmap();
     m_numberBase.load(":/images/number.png");
 
     connect(m_timer, &QTimer::timeout, this, [=]()
@@ -20,6 +21,8 @@ CountDown::CountDown(QWidget* parent)
         --m_count;
 
         if (m_count > 9) return;
+
+        if (m_count == 9) m_clock.load(":/images/clock.png");
         
         if (m_count > 0)
         {
@@ -39,8 +42,6 @@ CountDown::CountDown(QWidget* parent)
 void CountDown::showCountDown()
 {
     m_count = 15;
-    m_clock.load(":/images/clock.png");
-    m_number = emptyPixmap();
     m_timer->start(1000);
 }
 

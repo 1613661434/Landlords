@@ -19,6 +19,9 @@ public:
     void thinkCallLord() override;
     // 考虑出牌
     void thinkPlayHand() override;
+
+signals:
+    void startCountDown();
 };
 
 #endif // USERPLAYER_H

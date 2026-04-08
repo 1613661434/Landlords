@@ -31,6 +31,8 @@ GamePanel::GamePanel(QWidget* parent)
     initPlayerContext();
     // 8. 扑克牌场景初始化
     initGameScene();
+    // 9. 倒计时窗口初始化
+    initCountDown();
 
     // 定时器实例化
     m_timer = new QTimer(this);
@@ -639,7 +641,8 @@ void GamePanel::onUserPlayHand()
         if (!hand.canBeat(PlayHand(m_gameCtl->getPendCards()))) return;
     }
 
-    // m_countDown->stopCountDown();
+    // 终止倒计时
+    m_countDown->stopCountDown();
 
     // 通过玩家对象出牌
     m_gameCtl->getUserPlayer()->playHand(cs);
@@ -649,11 +652,13 @@ void GamePanel::onUserPlayHand()
 
 void GamePanel::onUserPass()
 {
-    // m_countDown->stopCountDown();
     // 判断是不是用户玩家
     Player* curPlayer = m_gameCtl->getCurrentPlayer();
     Player* userPlayer = m_gameCtl->getUserPlayer();
     if (curPlayer != userPlayer) return;
+
+    // 终止倒计时
+    m_countDown->stopCountDown();
 
     // 判断当前用户玩家是不是上一次出牌的玩家(可以不处理)
     Player* pendPlayer = m_gameCtl->getPendPlayer();
@@ -741,6 +746,22 @@ void GamePanel::showEndingScorePanel()
          animation->deleteLater();
          ui->btnGroup->selectPanel(ButtonGroup::Panel::Empty);
          gameStatusPrecess(GameControl::GameStatus::DispatchCard); });
+}
+
+void GamePanel::initCountDown()
+{
+    m_countDown = new CountDown(this);
+    m_countDown->move((width() - m_countDown->width()) / 2, (height() - m_countDown->height()) / 2 + 30);
+    connect(m_countDown, &CountDown::notMuchTime, this, [this]()
+            {
+                // 播放提示音乐
+                // m_bgm->playAssistMusic(BGMControl::Alert);
+            });
+    connect(m_countDown, &CountDown::timeout, this, &GamePanel::onUserPass);
+    connect(m_gameCtl->getUserPlayer(), &UserPlayer::startCountDown, this, [this]()
+            {
+                if (m_gameCtl->getPendPlayer() == m_gameCtl->getUserPlayer() || m_gameCtl->getPendPlayer() == nullptr) return;
+                m_countDown->showCountDown(); });
 }
 
 void GamePanel::paintEvent(QPaintEvent* ev)

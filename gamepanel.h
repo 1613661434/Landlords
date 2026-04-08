@@ -8,6 +8,7 @@
 #include "gamecontrol.h"
 #include "cardpanel.h"
 #include "animationwindow.h"
+#include "countdown.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -72,6 +73,7 @@ private:
     QSet<CardPanel*> m_selectCards;
     QRect m_userCardsRect;
     QHash<CardPanel*, QRect> m_userCards;
+    CountDown* m_countDown;
 
 public:
     GamePanel(QWidget* parent = nullptr);
