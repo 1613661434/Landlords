@@ -687,12 +687,24 @@ void GamePanel::showAnimation(AnimationType type, int point)
         return;
     case AnimationType::Seq_Single:
     case AnimationType::Seq_Pair:
-        break;
-    case AnimationType::Plane:
+        m_animation->setFixedSize(250, 150);
+        m_animation->move((width() - m_animation->width()) / 2, 200);
+        m_animation->showSequence(type == AnimationType::Seq_Pair);
         break;
     case AnimationType::Bomb:
+        m_animation->setFixedSize(180, 200);
+        m_animation->move((width() - m_animation->width()) / 2, (height() - m_animation->height()) / 2 - 70);
+        m_animation->showBomb();
         break;
     case AnimationType::JokerBomb:
+        m_animation->setFixedSize(250, 200);
+        m_animation->move((width() - m_animation->width()) / 2, (height() - m_animation->height()) / 2 - 70);
+        m_animation->showJokerBomb();
+        break;
+    case AnimationType::Plane:
+        m_animation->setFixedSize(800, 75);
+        m_animation->move((width() - m_animation->width()) / 2, 200);
+        m_animation->showPlane();
         break;
     }
     m_animation->show();

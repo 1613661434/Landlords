@@ -31,9 +31,9 @@ private:
         Score,
         Seq_Single,
         Seq_Pair,
-        Plane,
         Bomb,
-        JokerBomb
+        JokerBomb,
+        Plane
     };
     struct PlayerContext
     {

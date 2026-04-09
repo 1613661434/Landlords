@@ -88,7 +88,7 @@ void AnimationWindow::showPlane()
 
     const int step = width() / 5;
     QTimer* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, [this, timer, &step]()
+    connect(timer, &QTimer::timeout, this, [this, timer, step]()
             {
         static int dist = 0;
         static int timers = 0;
