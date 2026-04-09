@@ -50,7 +50,6 @@
         "qrc:/music/Man_sidailiangdui.mp3",
         "qrc:/music/Man_zhadan.mp3",
         "qrc:/music/Man_wangzha.mp3",
-
         "qrc:/music/Man_buyao1.mp3",
         "qrc:/music/Man_buyao2.mp3",
         "qrc:/music/Man_buyao3.mp3",
@@ -65,7 +64,6 @@
         "qrc:/music/Man_Rob3.mp3",
         "qrc:/music/Man_baojing1.mp3",
         "qrc:/music/Man_baojing2.mp3",
-
         "qrc:/music/Man_Share.mp3",
         "qrc:/music/Man_bujiabei.mp3",
         "qrc:/music/Man_jiabei.mp3"
@@ -136,24 +134,22 @@
         "qrc:/music/Woman_baojing1.mp3",
         "qrc:/music/Woman_baojing2.mp3"
     ],
-"BGM": [
+    "BGM": [
         "qrc:/music/MusicEx_Welcome.mp3",
         "qrc:/music/MusicEx_Normal.mp3",
         "qrc:/music/MusicEx_Normal2.mp3",
         "qrc:/music/MusicEx_Exciting.mp3"
     ],
-"Ending": [
+    "Ending": [
         "qrc:/music/MusicEx_Win.mp3",
         "qrc:/music/MusicEx_Lose.mp3"
     ],
-"Other": [
+    "Other": [
         "qrc:/music/Special_Dispatch.mp3",
         "qrc:/music/SpecSelectCard.mp3",
         "qrc:/music/Special_plane.mp3",
         "qrc:/music/Special_Bomb.mp3",
         "qrc:/music/Special_alert.mp3",
-
-
         "qrc:/music/SpecBeanChanged.mp3",
         "qrc:/music/SpecBeanFly.mp3",
         "qrc:/music/SpecBeanLess.mp3",

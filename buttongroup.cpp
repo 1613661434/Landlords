@@ -68,7 +68,7 @@ void ButtonGroup::selectPanel(Panel type, int point)
         ui->twoScore->setVisible(true);
         ui->threeScore->setVisible(true);
     }
-    else // point == 2
+    else // if (point == 2)
     {
         ui->oneScore->setVisible(false);
         ui->twoScore->setVisible(false);
