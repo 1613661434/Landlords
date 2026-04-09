@@ -147,7 +147,6 @@ void GameControl::onGrabBet(Player* player, int point)
             emit gameStatusChanged(GameControl::GameStatus::DispatchCard);
         else
             becomeLord(m_betRecord.player, m_betRecord.point);
-
         m_betRecord.reset();
         return;
     }
