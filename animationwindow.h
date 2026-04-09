@@ -6,13 +6,6 @@
 class AnimationWindow : public QWidget
 {
     Q_OBJECT
-public:
-    enum class Type : char
-    {
-        Sequence,
-        Pair
-    };
-
 private:
     QPixmap m_image;
     int m_index = 0;
@@ -24,11 +17,11 @@ public:
     // 显示下注分数
     void showBetScore(int point);
     // 显示顺子和连对
-    void showSequence(Type type);
-    // 显示王炸
-    void showJokerBomb();
+    void showSequence(bool isPair);
     // 显示炸弹
     void showBomb();
+    // 显示王炸
+    void showJokerBomb();
     // 显示飞机
     void showPlane();
 

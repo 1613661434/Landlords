@@ -26,7 +26,7 @@ CountDown::CountDown(QWidget* parent)
         
         if (m_count > 0)
         {
-            m_number = m_numberBase.copy(m_count*40, 0, 30, 42).scaled(20, 30, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            m_number = m_numberBase.copy(m_count * 40, 0, 30, 42).scaled(20, 30, Qt::KeepAspectRatio, Qt::SmoothTransformation);
             if (m_count == 5) emit notMuchTime();
         } 
         else

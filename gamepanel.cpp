@@ -432,7 +432,7 @@ QPixmap GamePanel::loadRoleImage(Player::Sex sex, Player::Direction direct, Play
         image.load(farmerMan.at(random));
     else if (sex == Player::Sex::Woman && role == Player::Role::Lord)
         image.load(lordWoman.at(random));
-    else if (sex == Player::Sex::Woman && role == Player::Role::Farmer)
+    else // if (sex == Player::Sex::Woman && role == Player::Role::Farmer)
         image.load(farmerWoman.at(random));
 
     QPixmap pixmap;
