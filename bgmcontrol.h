@@ -7,6 +7,7 @@
 #include <QVector>
 #include <QUrl>
 #include "cards.h"
+#include "ol_MediaPlaylist.h"
 
 class BGMControl : public QObject
 {
@@ -96,10 +97,10 @@ public:
     };
 
 private:
-    // 5组播放器：0男 1女 2BGM 3辅助音效 4结束音乐
-    QVector<QMediaPlayer*> m_players;      // 播放器
-    QVector<QAudioOutput*> m_audioOutputs; // 音频输出
-    QVector<QVector<QUrl>> m_mediaLists;   // 存储每组音频路径
+    // 音频组：0男音效 1女音效 2背景音乐 3辅助音效 4结束音效
+    QVector<QMediaPlayer*> m_players;        // 播放器
+    QVector<QAudioOutput*> m_outputs;        // 音频输出
+    QVector<ol::MediaPlaylist*> m_playlists; // 播放列表
 
 public:
     explicit BGMControl(QObject* parent = nullptr);

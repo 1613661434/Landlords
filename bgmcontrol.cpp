@@ -9,33 +9,42 @@
 
 BGMControl::BGMControl(QObject* parent) : QObject(parent)
 {
-    // 初始化5组 播放器 + 音频输出
+    // 初始化5组音频单元
     for (int i = 0; i < 5; ++i)
     {
-        QAudioOutput* audioOut = new QAudioOutput(this);
+        // 1. 创建音频组件
+        QAudioOutput* output = new QAudioOutput(this);
         QMediaPlayer* player = new QMediaPlayer(this);
-        player->setAudioOutput(audioOut);
-        audioOut->setVolume(1);
+        ol::MediaPlaylist* playlist = new ol::MediaPlaylist(this);
 
-        // BGM(索引2) 设置无限循环
-        if (i == 2) player->setLoops(QMediaPlayer::Infinite);
+        // 2. 绑定播放器与播放列表（自动切歌/循环）
+        player->setAudioOutput(output);
+        playlist->setPlayer(player);
+        output->setVolume(1.0f);
 
-        m_audioOutputs.push_back(audioOut);
+        // 3. 设置播放模式
+        if (i == 2) // BGM：列表循环
+            playlist->setPlaybackMode(ol::MediaPlaylist::PlaybackMode::SequentialLoop);
+        else // 默认：单次播放
+            playlist->setPlaybackMode(ol::MediaPlaylist::PlaybackMode::CurrentItemOnce);
+
+        // 4. 存入容器
+        m_outputs.push_back(output);
         m_players.push_back(player);
-        m_mediaLists.push_back(QVector<QUrl>());
+        m_playlists.push_back(playlist);
     }
 
-    // 加载音频配置
     initPlayList();
 }
 
 BGMControl::~BGMControl()
 {
+    qDeleteAll(m_playlists);
     qDeleteAll(m_players);
-    qDeleteAll(m_audioOutputs);
+    qDeleteAll(m_outputs);
+    m_playlists.clear();
     m_players.clear();
-    m_audioOutputs.clear();
-    m_mediaLists.clear();
+    m_outputs.clear();
 }
 
 void BGMControl::initPlayList()
@@ -51,17 +60,18 @@ void BGMControl::initPlayList()
     file.close();
     QJsonObject root = doc.object();
 
-    // 加载每组音频路径
+    // 加载音频到播放列表
     for (int i = 0, size = (int)typeList.size(); i < size; ++i)
     {
         QJsonArray array = root[typeList[i]].toArray();
-        for (const auto& item : array) m_mediaLists[i].append(QUrl(item.toString()));
+        for (const auto& item : array) m_playlists[i]->addMedia(QUrl(item.toString()));
     }
 }
 
 void BGMControl::startBGM(float volume)
 {
-    m_audioOutputs[2]->setVolume(volume);
+    m_outputs[2]->setVolume(volume);
+    m_playlists[2]->setCurrentIndex(0);
     m_players[2]->play();
 }
 
@@ -85,7 +95,7 @@ void BGMControl::playerRobLordMusic(int point, bool isMan, bool isFirst)
         audioIdx = (int)MusicType::Rob2;
 
     // 设置音源播放
-    m_players[index]->setSource(m_mediaLists[index][audioIdx]);
+    m_playlists[index]->setCurrentIndex(audioIdx);
     m_players[index]->play();
 }
 
@@ -127,7 +137,7 @@ void BGMControl::playCardMusic(Cards cards, bool isFirst, bool isMan)
     }
 
     // 播放音效
-    m_players[index]->setSource(m_mediaLists[index][audioIdx]);
+    m_playlists[index]->setCurrentIndex(audioIdx);
     m_players[index]->play();
 
     // 联动辅助音效
@@ -144,14 +154,14 @@ void BGMControl::playLastMusic(MusicType type, bool isMan)
 
     if (player->playbackState() == QMediaPlayer::StoppedState)
     {
-        player->setSource(m_mediaLists[index][(int)type]);
+        m_playlists[index]->setCurrentIndex((int)type);
         player->play();
     }
     else
     {
         QTimer::singleShot(1500, this, [=]()
                            {
-            player->setSource(m_mediaLists[index][(int)type]);
+            m_playlists[index]->setCurrentIndex((int)type);
             player->play(); });
     }
 }
@@ -161,21 +171,22 @@ void BGMControl::playPassMusic(bool isMan)
     int index = isMan ? 0 : 1;
     int audioIdx = (int)MusicType::Pass1 + QRandomGenerator::global()->bounded(4);
 
-    m_players[index]->setSource(m_mediaLists[index][audioIdx]);
+    m_playlists[index]->setCurrentIndex(audioIdx);
     m_players[index]->play();
 }
 
 void BGMControl::playAssistMusic(AssistMusicType type)
 {
+    auto playlist = m_playlists[3];
     auto player = m_players[3];
 
-    // 发牌音效循环
+    // 发牌：单曲循环 | 其他：单次播放
     if (type == AssistMusicType::Dispatch)
-        player->setLoops(QMediaPlayer::Infinite);
+        playlist->setPlaybackMode(ol::MediaPlaylist::PlaybackMode::CurrentItemLoop);
     else
-        player->setLoops(1); // 单次播放
+        playlist->setPlaybackMode(ol::MediaPlaylist::PlaybackMode::CurrentItemOnce);
 
-    player->setSource(m_mediaLists[3][(int)type]);
+    playlist->setCurrentIndex((int)type);
     player->play();
 }
 
@@ -187,6 +198,6 @@ void BGMControl::stopAssistMusic()
 void BGMControl::playEndingMusic(bool isWin)
 {
     int audioIdx = isWin ? 0 : 1;
-    m_players[4]->setSource(m_mediaLists[4][audioIdx]);
+    m_playlists[4]->setCurrentIndex(audioIdx);
     m_players[4]->play();
 }
