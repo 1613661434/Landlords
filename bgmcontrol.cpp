@@ -140,19 +140,18 @@ void BGMControl::playCardMusic(Cards cards, bool isFirst, bool isMan)
 void BGMControl::playLastMusic(MusicType type, bool isMan)
 {
     int index = isMan ? 0 : 1;
-    int audioIdx = (int)type;
     auto player = m_players[index];
 
     if (player->playbackState() == QMediaPlayer::StoppedState)
     {
-        player->setSource(m_mediaLists[index][audioIdx]);
+        player->setSource(m_mediaLists[index][(int)type]);
         player->play();
     }
     else
     {
         QTimer::singleShot(1500, this, [=]()
                            {
-            player->setSource(m_mediaLists[index][audioIdx]);
+            player->setSource(m_mediaLists[index][(int)type]);
             player->play(); });
     }
 }
@@ -160,8 +159,7 @@ void BGMControl::playLastMusic(MusicType type, bool isMan)
 void BGMControl::playPassMusic(bool isMan)
 {
     int index = isMan ? 0 : 1;
-    int rand = QRandomGenerator::global()->bounded(4);
-    int audioIdx = (int)MusicType::Pass1 + rand;
+    int audioIdx = (int)MusicType::Pass1 + QRandomGenerator::global()->bounded(4);
 
     m_players[index]->setSource(m_mediaLists[index][audioIdx]);
     m_players[index]->play();
@@ -169,21 +167,15 @@ void BGMControl::playPassMusic(bool isMan)
 
 void BGMControl::playAssistMusic(AssistMusicType type)
 {
-    int index = 3;
-    int audioIdx = (int)type;
-    auto player = m_players[index];
+    auto player = m_players[3];
 
     // 发牌音效循环
     if (type == AssistMusicType::Dispatch)
-    {
         player->setLoops(QMediaPlayer::Infinite);
-    }
     else
-    {
         player->setLoops(1); // 单次播放
-    }
 
-    player->setSource(m_mediaLists[index][audioIdx]);
+    player->setSource(m_mediaLists[3][(int)type]);
     player->play();
 }
 
@@ -194,8 +186,7 @@ void BGMControl::stopAssistMusic()
 
 void BGMControl::playEndingMusic(bool isWin)
 {
-    int index = 4;
     int audioIdx = isWin ? 0 : 1;
-    m_players[index]->setSource(m_mediaLists[index][audioIdx]);
-    m_players[index]->play();
+    m_players[4]->setSource(m_mediaLists[4][audioIdx]);
+    m_players[4]->play();
 }

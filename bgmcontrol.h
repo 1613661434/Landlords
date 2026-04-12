@@ -88,11 +88,11 @@ public:
     // 辅助音效
     enum class AssistMusicType : char
     {
-        Dispatch,
-        SelectCard,
-        PlaneVoice,
-        BombVoice,
-        Alert
+        Dispatch,   // 发牌
+        SelectCard, // 选牌
+        PlaneVoice, // 飞机
+        BombVoice,  // 炸弹
+        Alert       // 提醒
     };
 
 private:
