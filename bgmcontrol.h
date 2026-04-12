@@ -12,8 +12,8 @@ class BGMControl : public QObject
 {
     Q_OBJECT
 public:
-    // 卡牌音效类型
-    enum class CardType : char
+    // 音效类型
+    enum class MusicType : char
     {
         // 单张牌
         Three,
@@ -86,7 +86,7 @@ public:
         Last2  // 只剩2张牌
     };
     // 辅助音效
-    enum class AssistMusic : char
+    enum class AssistMusicType : char
     {
         Dispatch,
         SelectCard,
@@ -117,13 +117,13 @@ public:
 
     // 3. 出牌音效
     void playCardMusic(Cards cards, bool isFirst, bool isMan);
-    void playLastMusic(CardType type, bool isMan);
+    void playLastMusic(MusicType type, bool isMan);
 
     // 4. 不出牌音效
     void playPassMusic(bool isMan);
 
     // 5. 辅助音效
-    void playAssistMusic(AssistMusic type);
+    void playAssistMusic(AssistMusicType type);
     void stopAssistMusic();
 
     // 6. 结束音效

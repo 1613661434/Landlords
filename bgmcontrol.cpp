@@ -76,13 +76,13 @@ void BGMControl::playerRobLordMusic(int point, bool isMan, bool isFirst)
     int audioIdx = 0;
 
     if (isFirst && point > 0)
-        audioIdx = (int)CardType::Order;
+        audioIdx = (int)MusicType::Order;
     else if (point == 0)
-        audioIdx = isFirst ? (int)CardType::NoOrder : (int)CardType::NoRob;
+        audioIdx = isFirst ? (int)MusicType::NoOrder : (int)MusicType::NoRob;
     else if (point == 2)
-        audioIdx = (int)CardType::Rob1;
+        audioIdx = (int)MusicType::Rob1;
     else if (point == 3)
-        audioIdx = (int)CardType::Rob2;
+        audioIdx = (int)MusicType::Rob2;
 
     // 设置音源播放
     m_players[index]->setSource(m_mediaLists[index][audioIdx]);
@@ -91,42 +91,39 @@ void BGMControl::playerRobLordMusic(int point, bool isMan, bool isFirst)
 
 void BGMControl::playCardMusic(Cards cards, bool isFirst, bool isMan)
 {
+    // 得到播放列表
     int index = isMan ? 0 : 1;
+
+    // 取出牌型 然后进行判断
     PlayHand hand(cards);
     PlayHand::HandType type = hand.getHandType();
-    Card::CardPoint pt = Card::CardPoint::Card_Begin;
     int audioIdx = 0;
-
-    if (type == PlayHand::HandType::Hand_Single || type == PlayHand::HandType::Hand_Pair || type == PlayHand::HandType::Hand_Triple)
-    {
-        pt = cards.takeRandomCard().getCardPoint();
-    }
 
     switch (type)
     {
-    case PlayHand::HandType::Hand_Single: audioIdx = (int)pt - 1; break;
-    case PlayHand::HandType::Hand_Pair: audioIdx = (int)pt - 1 + 15; break;
-    case PlayHand::HandType::Hand_Triple: audioIdx = (int)pt - 1 + 28; break;
-    case PlayHand::HandType::Hand_Triple_Single: audioIdx = (int)CardType::ThreeBindOne; break;
-    case PlayHand::HandType::Hand_Triple_Pair: audioIdx = (int)CardType::ThreeBindPair; break;
+    case PlayHand::HandType::Hand_Single: audioIdx = (int)cards.minPoint() - 1; break;
+    case PlayHand::HandType::Hand_Pair: audioIdx = (int)cards.minPoint() + 14; break;
+    case PlayHand::HandType::Hand_Triple: audioIdx = (int)cards.minPoint() + 27; break;
+    case PlayHand::HandType::Hand_Triple_Single: audioIdx = (int)MusicType::ThreeBindOne; break;
+    case PlayHand::HandType::Hand_Triple_Pair: audioIdx = (int)MusicType::ThreeBindPair; break;
     case PlayHand::HandType::Hand_Plane:
     case PlayHand::HandType::Hand_Plane_Two_Single:
-    case PlayHand::HandType::Hand_Plane_Two_Pair: audioIdx = (int)CardType::Plane; break;
-    case PlayHand::HandType::Hand_Seq_Pair: audioIdx = (int)CardType::SequencePair; break;
-    case PlayHand::HandType::Hand_Seq_Single: audioIdx = (int)CardType::Sequence; break;
-    case PlayHand::HandType::Hand_Bomb: audioIdx = (int)CardType::Bomb; break;
-    case PlayHand::HandType::Hand_Bomb_Jokers: audioIdx = (int)CardType::JokerBomb; break;
+    case PlayHand::HandType::Hand_Plane_Two_Pair: audioIdx = (int)MusicType::Plane; break;
+    case PlayHand::HandType::Hand_Seq_Pair: audioIdx = (int)MusicType::SequencePair; break;
+    case PlayHand::HandType::Hand_Seq_Single: audioIdx = (int)MusicType::Sequence; break;
+    case PlayHand::HandType::Hand_Bomb: audioIdx = (int)MusicType::Bomb; break;
+    case PlayHand::HandType::Hand_Bomb_Jokers: audioIdx = (int)MusicType::JokerBomb; break;
     case PlayHand::HandType::Hand_Bomb_Pair:
     case PlayHand::HandType::Hand_Bomb_Two_Single:
     case PlayHand::HandType::Hand_Bomb_Jokers_Pair:
-    case PlayHand::HandType::Hand_Bomb_Jokers_Two_Single: audioIdx = (int)CardType::FourBindTwo; break;
+    case PlayHand::HandType::Hand_Bomb_Jokers_Two_Single: audioIdx = (int)MusicType::FourBindTwo; break;
     default: break;
     }
 
-    // 随机大你/压死
-    if (!isFirst && audioIdx >= (int)CardType::Plane && audioIdx <= (int)CardType::FourBindTwo)
+    // 随机大你/管上
+    if (!isFirst && audioIdx >= (int)MusicType::Plane && audioIdx <= (int)MusicType::FourBindTwo)
     {
-        audioIdx = (int)CardType::MoreBiger1 + QRandomGenerator::global()->bounded(2);
+        audioIdx = (int)MusicType::MoreBiger1 + QRandomGenerator::global()->bounded(2); // 没有包含压死，不做了
     }
 
     // 播放音效
@@ -134,13 +131,13 @@ void BGMControl::playCardMusic(Cards cards, bool isFirst, bool isMan)
     m_players[index]->play();
 
     // 联动辅助音效
-    if (audioIdx == (int)CardType::Bomb || audioIdx == (int)CardType::JokerBomb)
-        playAssistMusic(AssistMusic::BombVoice);
-    if (audioIdx == (int)CardType::Plane)
-        playAssistMusic(AssistMusic::PlaneVoice);
+    if (audioIdx == (int)MusicType::Bomb || audioIdx == (int)MusicType::JokerBomb)
+        playAssistMusic(AssistMusicType::BombVoice);
+    else if (audioIdx == (int)MusicType::Plane)
+        playAssistMusic(AssistMusicType::PlaneVoice);
 }
 
-void BGMControl::playLastMusic(CardType type, bool isMan)
+void BGMControl::playLastMusic(MusicType type, bool isMan)
 {
     int index = isMan ? 0 : 1;
     int audioIdx = (int)type;
@@ -164,20 +161,20 @@ void BGMControl::playPassMusic(bool isMan)
 {
     int index = isMan ? 0 : 1;
     int rand = QRandomGenerator::global()->bounded(4);
-    int audioIdx = (int)CardType::Pass1 + rand;
+    int audioIdx = (int)MusicType::Pass1 + rand;
 
     m_players[index]->setSource(m_mediaLists[index][audioIdx]);
     m_players[index]->play();
 }
 
-void BGMControl::playAssistMusic(AssistMusic type)
+void BGMControl::playAssistMusic(AssistMusicType type)
 {
     int index = 3;
     int audioIdx = (int)type;
     auto player = m_players[index];
 
     // 发牌音效循环
-    if (type == AssistMusic::Dispatch)
+    if (type == AssistMusicType::Dispatch)
     {
         player->setLoops(QMediaPlayer::Infinite);
     }
