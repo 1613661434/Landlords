@@ -59,7 +59,7 @@ public:
     int pointCount(Card::CardPoint point) const;                                               // 指定点数牌的数量
     inline bool contains(const Card& card) const { return m_cards.contains(card); }            // 某张牌是否在集合中
     inline bool contains(const Cards& cards) const { return m_cards.contains(cards.m_cards); } // 某几张牌是否在集合中
-    Card takeRandCard();                                                                       // 随机取一张牌
+    Card takeRandomCard();                                                                     // 随机取一张牌
     CardList toCardList(SortType type = SortType::Desc) const;
 };
 

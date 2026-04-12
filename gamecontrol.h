@@ -61,7 +61,7 @@ public:
     void initAllCards();
 
     // 每次发一张牌
-    inline Card takeOneCard() { return m_allCards.takeRandCard(); }
+    inline Card takeOneCard() { return m_allCards.takeRandomCard(); }
 
     // 得到最后的三张底牌
     inline Cards getSurplusCards() const { return m_allCards; }
