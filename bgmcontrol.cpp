@@ -70,9 +70,9 @@ void BGMControl::stopBGM()
     m_players[2]->stop();
 }
 
-void BGMControl::playerRobLordMusic(int point, RoleSex sex, bool isFirst)
+void BGMControl::playerRobLordMusic(int point, bool isMan, bool isFirst)
 {
-    int index = (sex == RoleSex::Man) ? 0 : 1;
+    int index = isMan ? 0 : 1;
     int audioIdx = 0;
 
     if (isFirst && point > 0)
@@ -84,14 +84,14 @@ void BGMControl::playerRobLordMusic(int point, RoleSex sex, bool isFirst)
     else if (point == 3)
         audioIdx = (int)CardType::Rob2;
 
-    // Qt6：直接设置音源播放
+    // 设置音源播放
     m_players[index]->setSource(m_mediaLists[index][audioIdx]);
     m_players[index]->play();
 }
 
-void BGMControl::playCardMusic(Cards cards, bool isFirst, RoleSex sex)
+void BGMControl::playCardMusic(Cards cards, bool isFirst, bool isMan)
 {
-    int index = (sex == RoleSex::Man) ? 0 : 1;
+    int index = isMan ? 0 : 1;
     PlayHand hand(cards);
     PlayHand::HandType type = hand.getHandType();
     Card::CardPoint pt = Card::CardPoint::Card_Begin;
@@ -140,9 +140,9 @@ void BGMControl::playCardMusic(Cards cards, bool isFirst, RoleSex sex)
         playAssistMusic(AssistMusic::PlaneVoice);
 }
 
-void BGMControl::playLastMusic(CardType type, RoleSex sex)
+void BGMControl::playLastMusic(CardType type, bool isMan)
 {
-    int index = (sex == RoleSex::Man) ? 0 : 1;
+    int index = isMan ? 0 : 1;
     int audioIdx = (int)type;
     auto player = m_players[index];
 
@@ -160,9 +160,9 @@ void BGMControl::playLastMusic(CardType type, RoleSex sex)
     }
 }
 
-void BGMControl::playPassMusic(RoleSex sex)
+void BGMControl::playPassMusic(bool isMan)
 {
-    int index = (sex == RoleSex::Man) ? 0 : 1;
+    int index = isMan ? 0 : 1;
     int rand = QRandomGenerator::global()->bounded(4);
     int audioIdx = (int)CardType::Pass1 + rand;
 

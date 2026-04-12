@@ -12,12 +12,6 @@ class BGMControl : public QObject
 {
     Q_OBJECT
 public:
-    // 性别枚举
-    enum class RoleSex : char
-    {
-        Man,
-        Woman
-    };
     // 卡牌音效类型
     enum class CardType : char
     {
@@ -37,9 +31,9 @@ public:
         Two,
         SmallJoker,
         BigJoker,
-        // 对子
+        // 两张牌
         Three_Double,
-        Four_Double,
+        Foue_Double,
         Five_Double,
         Six_Double,
         Seven_Double,
@@ -50,10 +44,10 @@ public:
         Queen_Double,
         King_Double,
         Ace_Double,
-        Two_Double,
-        // 三张
+        Tow_Double,
+        // 三张牌
         Three_Triple,
-        Four_Triple,
+        Foue_Triple,
         Five_Triple,
         Six_Triple,
         Seven_Triple,
@@ -64,35 +58,32 @@ public:
         Queen_Triple,
         King_Triple,
         Ace_Triple,
-        Two_Triple,
-        // 组合牌型
-        Plane,
-        SequencePair,
-        ThreeBindOne,
-        ThreeBindPair,
-        Sequence,
-        FourBindTwo,
-        FourBind2Pair,
-        Bomb,
-        JokerBomb,
-        // 过
-        Pass1,
+        Tow_Triple,
+        // 其他组合
+        Plane,         // 飞机
+        SequencePair,  // 连对
+        ThreeBindOne,  // 三带一
+        ThreeBindPair, // 三带一对
+        Sequence,      // 顺子
+        FourBindTwo,   // 四带二(单张)
+        FourBind2Pair, // 四带两对
+        Bomb,          // 炸弹
+        JokerBomb,     // 王炸
+        Pass1,         // 过
         Pass2,
         Pass3,
         Pass4,
-        // 压制
-        MoreBiger1,
+        MoreBiger1, // 大你
         MoreBiger2,
-        Biggest,
-        // 抢地主
-        NoOrder,
-        NoRob,
-        Order,
-        Rob1,
+        Biggest, // 压死
+                 // 抢地主
+        NoOrder, // 不叫
+        NoRob,   // 不抢
+        Order,   // 叫地主
+        Rob1,    // 抢地主
         Rob2,
-        // 剩余牌
-        Last1,
-        Last2
+        Last1, // 只剩1张牌
+        Last2  // 只剩2张牌
     };
     // 辅助音效
     enum class AssistMusic : char
@@ -122,14 +113,14 @@ public:
     void stopBGM();
 
     // 2. 抢地主音效
-    void playerRobLordMusic(int point, RoleSex sex, bool isFirst);
+    void playerRobLordMusic(int point, bool isMan, bool isFirst);
 
     // 3. 出牌音效
-    void playCardMusic(Cards cards, bool isFirst, RoleSex sex);
-    void playLastMusic(CardType type, RoleSex sex);
+    void playCardMusic(Cards cards, bool isFirst, bool isMan);
+    void playLastMusic(CardType type, bool isMan);
 
     // 4. 不出牌音效
-    void playPassMusic(RoleSex sex);
+    void playPassMusic(bool isMan);
 
     // 5. 辅助音效
     void playAssistMusic(AssistMusic type);
