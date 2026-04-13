@@ -119,11 +119,11 @@ namespace ol
         QUrl previousMedia();
 
     signals:
-        /**
-         * @brief 播放索引改变信号
-         * @param newIndex 新的播放索引
-         */
-        void currentIndexChanged(int newIndex);
+        // /**
+        //  * @brief 播放索引改变信号，用于用户未来功能扩展
+        //  * @param newIndex 新的播放索引
+        //  */
+        // void currentIndexChanged(int newIndex);
 
     private slots:
         /**

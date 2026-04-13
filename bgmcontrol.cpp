@@ -104,7 +104,7 @@ void BGMControl::playCardMusic(Cards cards, bool isFirst, bool isMan)
     // 得到播放列表
     int index = isMan ? 0 : 1;
 
-    // 取出牌型 然后进行判断
+    // 取出牌型，然后进行判断
     PlayHand hand(cards);
     PlayHand::HandType type = hand.getHandType();
     int audioIdx = 0;

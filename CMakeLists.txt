@@ -37,6 +37,7 @@ qt_add_executable(Landlords
     countdown.h countdown.cpp
     bgmcontrol.h bgmcontrol.cpp
     ol_MediaPlaylist.h ol_MediaPlaylist.cpp
+    loading.h loading.cpp
 )
 
 target_link_libraries(Landlords

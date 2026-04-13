@@ -633,7 +633,8 @@ void GamePanel::onCardSelected(Qt::MouseButton button)
             m_selectCards.insert(panel);
         else
             m_selectCards.erase(it);
-        m_bgm->playAssistMusic(BGMControl::AssistMusicType::SelectCard);
+        // 不要选牌音效了
+        // m_bgm->playAssistMusic(BGMControl::AssistMusicType::SelectCard);
     }
     else if (button == Qt::RightButton)
     {

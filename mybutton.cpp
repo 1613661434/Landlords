@@ -42,6 +42,7 @@ void MyButton::leaveEvent(QEvent* ev)
 
 void MyButton::paintEvent(QPaintEvent* ev)
 {
+    Q_UNUSED(ev)
     QPainter p(this);
     p.drawPixmap(rect(), m_pixmap);
 }

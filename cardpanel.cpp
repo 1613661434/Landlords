@@ -8,6 +8,7 @@ CardPanel::CardPanel(QWidget* parent)
 
 void CardPanel::paintEvent(QPaintEvent* ev)
 {
+    Q_UNUSED(ev)
     QPainter p(this);
     p.drawPixmap(rect(), m_isFront ? m_front : m_back);
 }

@@ -25,7 +25,7 @@ namespace ol
     {
         m_mediaList.clear();
         m_currentIndex = -1;
-        emit currentIndexChanged(m_currentIndex);
+        // emit currentIndexChanged(m_currentIndex);
     }
 
     void MediaPlaylist::setCurrentIndex(int index)
@@ -33,7 +33,7 @@ namespace ol
         if (index >= 0 && index < m_mediaList.size() && index != m_currentIndex)
         {
             m_currentIndex = index;
-            emit currentIndexChanged(m_currentIndex);
+            // emit currentIndexChanged(m_currentIndex);
 
             // 自动切换播放器音源
             if (m_player) m_player->setSource(getCurrentMedia());
@@ -76,8 +76,7 @@ namespace ol
     {
         if (m_mediaList.isEmpty()) return QUrl();
 
-        const int newIdx = (m_currentIndex - 1 + m_mediaList.size()) % m_mediaList.size();
-        setCurrentIndex(newIdx);
+        setCurrentIndex((m_currentIndex - 1 + m_mediaList.size()) % m_mediaList.size());
         return getCurrentMedia();
     }
 
