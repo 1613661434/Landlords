@@ -49,8 +49,6 @@ protected:
     Cards m_cards;
     Cards m_pendCards;
     Player* m_pendPlayer = nullptr;
-    mutable QMutex m_cardMutex;
-    mutable QMutex m_roleMutex;
 
     // == 函数 ==
 public:
@@ -62,8 +60,8 @@ public:
     inline QString getName() const { return m_name; }
 
     // 角色
-    void setRole(Role role);
-    Role getRole() const;
+    inline void setRole(Role role) { m_role = role; }
+    inline Role getRole() const { return m_role; }
 
     // 性别
     inline void setSex(Sex sex) { m_sex = sex; }
@@ -97,8 +95,16 @@ public:
     inline void grabLordBet(int point) { emit notifyGrabLordBet(this, point); };
 
     // 存储扑克牌（发牌阶段）
-    void storeDispatchCard(const Card& card);
-    void storeDispatchCard(const Cards& cards);
+    inline void storeDispatchCard(const Card& card)
+    {
+        m_cards.add(card);
+        emit notifyPickCards(this, Cards(card));
+    }
+    inline void storeDispatchCard(const Cards& cards)
+    {
+        m_cards.add(cards);
+        emit notifyPickCards(this, cards);
+    }
 
     // 存储出牌玩家对象和打出的牌
     inline void storePendingInfo(Player* player, const Cards& cards)
@@ -107,9 +113,13 @@ public:
         m_pendCards = cards;
     }
 
-    Cards getCards() const;      // 得到所有牌
-    void clearCards();           // 清空所有牌
-    void playHand(Cards& cards); // 出牌
+    inline Cards getCards() const { return m_cards; } // 得到所有牌
+    inline void clearCards() { m_cards.clear(); }     // 清空所有牌
+    inline void playHand(Cards& cards)                // 出牌
+    {
+        m_cards.remove(cards);
+        emit notifyPlayHand(this, cards);
+    };
 
     // 待处理扑克牌相关
     inline void setPendingInfo(Player* player, const Cards& cards)
