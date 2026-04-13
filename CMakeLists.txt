@@ -10,8 +10,12 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Multimedia)
 
 qt_standard_project_setup()
 
+# add_definitions(-DLANDLORDS_USE_EXTERNAL_RCC)
+set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.rc")
+
 qt_add_executable(Landlords
     WIN32 MACOSX_BUNDLE
+    ${app_icon_resource_windows}
     res.qrc
     main.cpp
     gamepanel.cpp

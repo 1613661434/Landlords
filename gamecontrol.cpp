@@ -158,7 +158,7 @@ void GameControl::onGrabBet(Player* player, int point)
     m_currPlayer->prepareCallLord();
 }
 
-void GameControl::onPlayHand(Player* player, Cards cards)
+void GameControl::onPlayHand(Player* player, Cards& cards)
 {
     // 1. 将玩家出牌的信号转发给主界面
     emit notifyPlayHand(player, cards);
