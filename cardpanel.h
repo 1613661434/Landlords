@@ -21,7 +21,7 @@ public:
     explicit CardPanel(QWidget* parent = nullptr);
 
     // 设置获取图片相关
-    inline void setImage(QPixmap& front, QPixmap& back)
+    inline void setImage(const QPixmap& front, const QPixmap& back)
     {
         m_front = front;
         m_back = back;

@@ -12,8 +12,8 @@ private:
     QPixmap m_clock;
     QPixmap m_numberBase;
     QPixmap m_number;
-    QTimer* m_timer;
-    int m_count;
+    QTimer* m_timer = nullptr;
+    int m_count = 0;
 
 public:
     explicit CountDown(QWidget* parent = nullptr);

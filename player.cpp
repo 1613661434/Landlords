@@ -27,7 +27,7 @@ Player::Role Player::getRole() const
     return m_role;
 }
 
-void Player::storeDispatchCard(Card& card)
+void Player::storeDispatchCard(const Card& card)
 {
     {
         QMutexLocker locker(&m_cardMutex);
@@ -36,7 +36,7 @@ void Player::storeDispatchCard(Card& card)
     emit notifyPickCards(this, Cards(card));
 }
 
-void Player::storeDispatchCard(Cards& cards)
+void Player::storeDispatchCard(const Cards& cards)
 {
     {
         QMutexLocker locker(&m_cardMutex);

@@ -7,14 +7,14 @@
 class RobotGrapLord : public QThread
 {
     Q_OBJECT
+private:
+    Robot* m_robot = nullptr;
+
 public:
     explicit RobotGrapLord(Robot* robot, QObject* parent = nullptr);
 
 protected:
     void run() override;
-
-private:
-    Robot* m_robot;
 
 signals:
 };

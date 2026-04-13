@@ -11,9 +11,9 @@ class EndingPanel : public QWidget
     Q_OBJECT
 private:
     QPixmap m_image;
-    QLabel* m_title;
-    ScorePanel* m_score;
-    QPushButton* m_continue;
+    QLabel* m_title = nullptr;
+    ScorePanel* m_score = nullptr;
+    QPushButton* m_continue = nullptr;
 
 public:
     explicit EndingPanel(bool isLord, bool isWin, QWidget* parent = nullptr);

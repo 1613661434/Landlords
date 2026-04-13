@@ -7,11 +7,11 @@
 class RobotPlayHand : public QThread
 {
     Q_OBJECT
+private:
+    Robot* m_robot = nullptr;
+
 public:
     explicit RobotPlayHand(Robot* robot, QObject* parent = nullptr);
-
-private:
-    Robot* m_robot;
 
 protected:
     void run() override;

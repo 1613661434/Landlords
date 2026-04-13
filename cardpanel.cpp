@@ -2,7 +2,7 @@
 #include <QMouseEvent>
 
 CardPanel::CardPanel(QWidget* parent)
-    : QWidget{parent}, m_isFront(true)
+    : QWidget{parent}, m_isFront(true), m_isSelected(false), m_owner(nullptr)
 {
 }
 

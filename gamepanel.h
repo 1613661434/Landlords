@@ -57,25 +57,25 @@ private:
 private:
     Ui::GamePanel* ui;
     QPixmap m_bkImage;
-    GameControl* m_gameCtl;
+    GameControl* m_gameCtl = nullptr;
     QVector<Player*> m_playerList; // 顺序：左侧机器人，右侧机器人，当前玩家
     QMap<Card, CardPanel*> m_cardMap;
     QSize m_cardSize;
     QPixmap m_cardBackImg;
     QMap<Player*, PlayerContext> m_contextMap;
-    CardPanel* m_baseCard;
-    CardPanel* m_moveCard;
+    CardPanel* m_baseCard = nullptr;
+    CardPanel* m_moveCard = nullptr;
     QVector<CardPanel*> m_last3Card;
     QPoint m_baseCardPos;
     GameControl::GameStatus m_gameStatus;
-    QTimer* m_timer;
-    AnimationWindow* m_animation;
-    CardPanel* m_curSelCard;
+    QTimer* m_timer = nullptr;
+    AnimationWindow* m_animation = nullptr;
+    CardPanel* m_curSelCard = nullptr;
     QSet<CardPanel*> m_selectCards;
     QRect m_userCardsRect;
     QHash<CardPanel*, QRect> m_userCards;
-    CountDown* m_countDown;
-    BGMControl* m_bgm;
+    CountDown* m_countDown = nullptr;
+    BGMControl* m_bgm = nullptr;
 
 public:
     GamePanel(QWidget* parent = nullptr);

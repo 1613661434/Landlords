@@ -42,13 +42,13 @@ protected:
     Sex m_sex;
     Direction m_direction;
     Type m_type;
-    int m_score;
-    bool m_isWin;
-    Player* m_prev;
-    Player* m_next;
+    int m_score = 0;
+    bool m_isWin = false;
+    Player* m_prev = nullptr;
+    Player* m_next = nullptr;
     Cards m_cards;
     Cards m_pendCards;
-    Player* m_pendPlayer;
+    Player* m_pendPlayer = nullptr;
     mutable QMutex m_cardMutex;
     mutable QMutex m_roleMutex;
 
@@ -97,8 +97,8 @@ public:
     inline void grabLordBet(int point) { emit notifyGrabLordBet(this, point); };
 
     // 存储扑克牌（发牌阶段）
-    void storeDispatchCard(Card& card);
-    void storeDispatchCard(Cards& cards);
+    void storeDispatchCard(const Card& card);
+    void storeDispatchCard(const Cards& cards);
 
     // 存储出牌玩家对象和打出的牌
     inline void storePendingInfo(Player* player, const Cards& cards)

@@ -21,7 +21,7 @@ private:
 
 public:
     Cards();
-    Cards(const Card& card);
+    explicit Cards(const Card& card);
 
     // 添加扑克牌
     inline void add(const Card& card) { m_cards.insert(card); }

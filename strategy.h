@@ -7,7 +7,7 @@
 class Strategy
 {
 private:
-    Player* m_player;
+    Player* m_player = nullptr;
     Cards m_cards;
 
 public:

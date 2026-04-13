@@ -40,7 +40,7 @@ public:
 private:
     HandType m_type;
     Card::CardPoint m_point;
-    int m_extra;
+    int m_extra = 0;
     QVector<Card::CardPoint> m_oneCard;
     QVector<Card::CardPoint> m_twoCard;
     QVector<Card::CardPoint> m_threeCard;
