@@ -277,7 +277,7 @@ void GamePanel::startDispatchCard()
         m_contextMap[m_playerList.at(i)].lastCards.clear();
         m_contextMap[m_playerList.at(i)].info->hide();
         m_contextMap[m_playerList.at(i)].roleImg->hide();
-        m_contextMap[m_playerList.at(i)].isFrontSide = (i == index ? true : false);
+        m_contextMap[m_playerList.at(i)].isFrontSide = (i == index);
     }
     // 重置所有玩家的卡牌数据
     m_gameCtl->resetCardData();
