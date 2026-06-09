@@ -2,6 +2,7 @@
 #define GAMEPANEL_H
 
 #include <QMainWindow>
+#include <QPushButton>
 #include <QPainter>
 #include <QLabel>
 #include <QTimer>
@@ -76,6 +77,7 @@ private:
     QHash<CardPanel*, QRect> m_userCards;
     CountDown* m_countDown = nullptr;
     BGMControl* m_bgm = nullptr;
+    QPushButton* m_aboutBtn = nullptr;
 
 public:
     GamePanel(QWidget* parent = nullptr);

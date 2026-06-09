@@ -3,6 +3,7 @@
 #include "ol_enum_char_ops.h"
 #include "playhand.h"
 #include "endingpanel.h"
+#include "aboutdialog.h"
 #include <QRandomGenerator>
 #include <QMouseEvent>
 #include <QPropertyAnimation>
@@ -43,6 +44,35 @@ GamePanel::GamePanel(QWidget* parent)
 
     // BGM控制类实例化
     m_bgm = new BGMControl(this);
+
+    // 右下角关于按钮 - 小圆形感叹号
+    m_aboutBtn = new QPushButton("!", this);
+    m_aboutBtn->setFixedSize(20, 20);
+    m_aboutBtn->setCursor(Qt::PointingHandCursor);
+    m_aboutBtn->setToolTip("关于");
+    m_aboutBtn->setStyleSheet(
+        "QPushButton {"
+        "  background-color: rgba(255, 255, 255, 60);"
+        "  color: rgba(255, 255, 255, 150);"
+        "  border: 1px solid rgba(255, 255, 255, 80);"
+        "  border-radius: 10px;"
+        "  font-size: 11px;"
+        "  font-weight: bold;"
+        "}"
+        "QPushButton:hover {"
+        "  background-color: rgba(255, 215, 0, 120);"
+        "  color: rgba(255, 255, 255, 220);"
+        "  border: 1px solid rgba(255, 215, 0, 150);"
+        "}"
+        "QPushButton:pressed {"
+        "  background-color: rgba(255, 215, 0, 80);"
+        "}");
+    m_aboutBtn->move(width() - 30, height() - 30);
+
+    connect(m_aboutBtn, &QPushButton::clicked, this, [this]()
+            {
+        AboutDialog dlg(this);
+        dlg.exec(); });
 }
 
 GamePanel::~GamePanel()
