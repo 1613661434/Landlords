@@ -83,3 +83,7 @@ CMakeLists.txt.user*
 
 # Bookmarks
 bookmarks.json
+
+# Local workspace settings
+/.vscode/
+/.agents/
