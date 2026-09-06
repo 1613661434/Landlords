@@ -1,5 +1,11 @@
 # Landlords（斗地主）
 
+[![GitHub Stars](https://img.shields.io/github/stars/1613661434/Landlords?style=flat-square&logo=github)](https://github.com/1613661434/Landlords/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/1613661434/Landlords?style=flat-square&logo=github)](https://github.com/1613661434/Landlords/forks)
+[![GitHub License](https://img.shields.io/github/license/1613661434/Landlords?style=flat-square)](LICENSE)
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/1613661434/Landlords?style=flat-square)](https://github.com/1613661434/Landlords/commits/main)
+[![GitHub Repo Size](https://img.shields.io/github/repo-size/1613661434/Landlords?style=flat-square)](https://github.com/1613661434/Landlords)
+
 基于 Qt6 的欢乐斗地主单机游戏，由[爱编程的大丙](https://subingwen.cn/)老师的 Qt5 斗地主课程改编而来，进行了代码优化并适配 Qt6。
 
 ## 特性
